@@ -1,5 +1,16 @@
 <script setup>
 import { defineAsyncComponent } from 'vue'
+import { useHead } from '@unhead/vue'
+
+useHead({
+    title: 'Color correction - skorikovkr',
+    meta: [
+        {
+            name: 'description',
+            content: "Simple color correction web application.",
+        },
+    ],
+})
 
 const ColorCorrectionWorkView = defineAsyncComponent(() =>
     import('./ColorCorrectionWorkView.vue')

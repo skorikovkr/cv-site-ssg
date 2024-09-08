@@ -4,7 +4,7 @@ import Card from 'primevue/card';
 import { useHead } from '@unhead/vue'
 
 useHead({
-    title: 'skorikovkr site',
+    title: 'Home - skorikovkr',
     meta: [
         {
             name: 'description',
