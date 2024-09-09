@@ -2,21 +2,18 @@
 import HeroSection from './HeroSection.vue';
 import Card from 'primevue/card';
 import { useHead } from '@unhead/vue'
+import { pageMeta } from './meta';
 
 useHead({
     title: 'Home - skorikovkr',
-    meta: [
-        {
-            name: 'description',
-            content: "Hello, I'm Skorikov Kirill and this is my personal site.",
-        },
-    ],
+    meta: pageMeta
 })
 </script>
 
 <template>
     <div>
         <HeroSection />
+        <p class="text-red-700">WEBSITE IS IN PROGRESS....</p>
         <div class="flex gap-2">
             <Card style="width: 25rem; overflow: hidden">
                 <template #header>

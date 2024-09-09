@@ -1,15 +1,11 @@
 <script setup>
 import { defineAsyncComponent } from 'vue'
 import { useHead } from '@unhead/vue'
+import { pageMeta } from './meta';
 
 useHead({
     title: 'Color correction - skorikovkr',
-    meta: [
-        {
-            name: 'description',
-            content: "Simple color correction web application.",
-        },
-    ],
+    meta: pageMeta
 })
 
 const ColorCorrectionWorkView = defineAsyncComponent(() =>
