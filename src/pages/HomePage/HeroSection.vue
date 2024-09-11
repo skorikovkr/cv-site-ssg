@@ -58,7 +58,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container mx-auto">
+    <div class="hero-section container mx-auto">
         <div class="sr-only">
             <h1>skorikovkr</h1>
             <p>Frontend developer</p>
