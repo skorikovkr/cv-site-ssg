@@ -200,19 +200,19 @@ const handleZoomTo1 = () => {
 <template>
     <div class="color-correction">
         <div class="flex gap-2">
-            <div class="color-correction_tools mb-2">
+            <div class="color-correction__tools mb-2">
                 <div>
                     <CurveCanvas ref="curveCanvas" :size="curveCanvasSize" :colorHistogram="colorCount"
                         :curve-color="curveColor" @curve-changed="onCurveChanged" />
                     <span>Presets:</span>
-                    <div class="toolbox flex gap-2 ml-2 flex-auto">
+                    <div class="color-correction__toolbox flex gap-2 ml-2 flex-auto">
                         <button @click="handleClick">Reset</button>
                         <button @click="handleNegativeClick">Negative</button>
                         <button @click="handleContrastClick">Contrast</button>
                         <button @click="handleDecontrastClick">Decontrast</button>
                     </div>
                     <span>Channels:</span>
-                    <div class="channels flex gap-2 ml-2 flex-auto">
+                    <div class="color-correction__channels flex gap-2 ml-2 flex-auto">
                         <button @click="handleRGBChannelClick">RGB</button>
                         <button @click="handleRChannelClick">R</button>
                         <button @click="handleGChannelClick">G</button>
@@ -223,7 +223,7 @@ const handleZoomTo1 = () => {
             </div>
             <FileUploader @fileUploaded="handleOpenImage" />
         </div>
-        <div class="color-correction_canvas">
+        <div class="color-correction__canvas">
             <ImageCanvas ref="imageCanvas" :height="700" :width="1024" bg-color="#333333"
                 @image-loaded="handleImageLoaded" />
         </div>
