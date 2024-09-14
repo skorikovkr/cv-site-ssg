@@ -11,8 +11,9 @@ const isTelegramDialogVisible = ref(false);
         <PrimeDialog v-model:visible="isTelegramDialogVisible" modal header="My telegram" :style="{ width: '15rem' }">
             <span class="p-text-secondary block mb-5">@skorikovkr</span>
         </PrimeDialog>
-        <div class="mt-16 flex flex-col items-center">
+        <div class="mt-16 flex flex-col items-center" id="contacts">
             <address class="mb-3 flex space-x-4">
+                <p>Contact me: </p>
                 <a href="https://github.com/skorikovkr" target="_blank" class="dark:text-white fill-current">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" fill="currentColor"
                         viewBox="0 0 24 24">

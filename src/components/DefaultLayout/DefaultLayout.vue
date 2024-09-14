@@ -9,7 +9,7 @@ import LayoutHeader from './LayoutHeader.vue';
             <div class="flex min-h-screen flex-col justify-between font-sans">
                 <LayoutHeader />
                 <slot></slot>
-                <LayoutFooter />
+                <LayoutFooter class="mt-5" />
             </div>
         </section>
     </div>

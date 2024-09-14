@@ -48,7 +48,7 @@ const getTransformedPoint = (x, y) => {
 }
 
 const handleMouseDown = (e) => {
-    if (e.button == 0 && e.shiftKey) {
+    if (e.button == 0) {
         if (viewCanvas.value == null || viewContext == null) return;
         isDragging.value = true;
         dragStartPosition.value = getTransformedPoint(e.offsetX, e.offsetY);
@@ -57,7 +57,7 @@ const handleMouseDown = (e) => {
 
 const handleMouseMove = (e) => {
     currentCursor.value = new DOMPoint(e.offsetX, e.offsetY);
-    if (e.button == 0 && e.shiftKey) {
+    if (e.button == 0) {
         if (isDragging.value && viewContext != null && currentCursor.value != null && dragStartPosition.value != null) {
             const currentTransformedCursor = getTransformedPoint(currentCursor.value.x, currentCursor.value.y);
             if (currentTransformedCursor == null) return;

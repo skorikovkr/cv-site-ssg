@@ -103,6 +103,9 @@ onMounted(() => {
                             Frontend <span class="font-bold"
                                 :class="{ 'text-gradient': isGradientApplied }">developer</span>
                         </p>
+                        <a href="#contacts"
+                            class="block text-xl text-center xl:text-end text-gray-400 font-semibold underline">// goto
+                            contacts</a>
                     </div>
                 </div>
             </div>

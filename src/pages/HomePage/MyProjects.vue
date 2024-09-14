@@ -40,7 +40,7 @@ const projects = ref([
         about: 'Color correction web application for images.',
         sources: [
             {
-                'link': 'https://github.com/skorikovkr/crm-frontend',
+                'link': 'https://github.com/skorikovkr/color-correction',
                 'linkTitle': 'Source'
             },
             {
@@ -82,7 +82,7 @@ const projects = ref([
                                 <RouterLink v-if="s.useRouterLink" :to="s.link">{{ s.linkTitle }}</RouterLink>
                                 <a v-else target="_blank" class="mr-2" :href="s.link">{{
                                     s.linkTitle
-                                    }}</a>
+                                }}</a>
                             </template>
                         </p>
                         <p class="tags mb-4">
