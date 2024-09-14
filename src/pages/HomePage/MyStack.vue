@@ -31,11 +31,11 @@ const cards = ref([
 </script>
 
 <template>
-    <div class="my-stack">
+    <section class="my-stack">
         <h2 class="text-3xl font-semibold mb-5">My stack</h2>
-        <div class="flex gap-4 justify-around flex-wrap relative">
+        <div class="flex gap-4 justify-center flex-wrap relative">
             <MyStackCard v-for="c in cards" :key="c.title" :img-src="c.imgSrc" :title="c.title" :subtitle="c.subtitle"
                 :content="c.content" />
         </div>
-    </div>
+    </section>
 </template>

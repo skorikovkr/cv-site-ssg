@@ -26,13 +26,13 @@ const cardParallaxStyle = computed(() => ({
     transform: isHovered.value ? `
         rotateX(${roll.value * -40}deg) 
         rotateY(${tilt.value * -40}deg) 
-        scale(1.33)` : 'scale(1)',
+        scale(1.1)` : 'none',
     zIndex: isHovered.value ? 1000 : 1
 }))
 </script>
 
 <template>
-    <Card ref="card" class="card w-96 overflow-hidden" :style="cardParallaxStyle">
+    <Card ref="card" class="card card--smooth-transform w-72 xl:w-96 overflow-hidden" :style="cardParallaxStyle">
         <template #header>
             <div class="pt-4 pl-4">
                 <img :src="imgSrc" class="h-16" :alt="title" />
@@ -49,3 +49,11 @@ const cardParallaxStyle = computed(() => ({
         </template>
     </Card>
 </template>
+
+<style scoped>
+.card--smooth-transform {
+    transition-property: transform;
+    transition-timing-function: linear;
+    transition-duration: 50ms;
+}
+</style>
