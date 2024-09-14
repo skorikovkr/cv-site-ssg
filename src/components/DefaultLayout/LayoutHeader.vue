@@ -16,8 +16,8 @@ const navLinks = computed(() => [
 </script>
 
 <template>
-    <header class="flex items-center justify-between py-10">
-        <div>
+    <header class="header flex items-center justify-between py-10">
+        <div class="header__logo">
             <a href="/">
                 <div class="flex items-center justify-between">
                     <div class="text-xl font-bold">
@@ -26,12 +26,13 @@ const navLinks = computed(() => [
                 </div>
             </a>
         </div>
-        <div class="flex items-center space-x-4 leading-5 sm:space-x-6">
-            <template v-for="link in navLinks" :key="link.title">
-                <RouterLink :to="link.href" class="hidden font-medium text-gray-900 dark:text-gray-100 sm:block">
+        <div class="flex items-center space-x-4 sm:space-x-6">
+            <nav class="flex items-center space-x-4 leading-5 sm:space-x-6">
+                <RouterLink v-for="link in navLinks" :key="link.title" :to="link.href"
+                    class="hidden font-medium text-gray-900 dark:text-gray-100 sm:block">
                     {{ link.title }}
                 </RouterLink>
-            </template>
+            </nav>
             <ClientOnly>
                 <div class="control-buttons hidden gap-4 sm:flex">
                     <ColorModePicker />

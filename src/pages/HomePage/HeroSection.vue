@@ -58,7 +58,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="hero-section container mx-auto">
+    <section class="hero-section container mx-auto">
         <div class="sr-only">
             <h1>skorikovkr</h1>
             <p>Frontend developer</p>
@@ -107,7 +107,7 @@ onMounted(() => {
                 </div>
             </div>
         </ClientOnly>
-    </div>
+    </section>
 </template>
 
 <style scoped>
