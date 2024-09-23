@@ -72,7 +72,8 @@ const projects = ref([
     <section class="my-projects">
         <h2 class="text-3xl font-semibold mb-5">My projects</h2>
         <ul>
-            <li v-for="p in projects" :key="p.title" class="my-projects__item mb-4">
+            <li v-for="p in projects" :key="p.title"
+                class="my-projects__item mb-4 pb-4 border-slate-200 dark:border-slate-100 border-b-[1px] last:border-none">
                 <article class="md:grid grid-cols-2 md:items-center">
                     <div class="my-projects__text">
                         <h3 class="text-2xl font-semibold mb-2">{{ p.title }}</h3>
@@ -85,9 +86,9 @@ const projects = ref([
                                 }}</a>
                             </template>
                         </p>
-                        <p class="tags mb-4">
-                            <span class="tag mr-2 bg-primary text-primary-contrast px-1 pb-1 rounded-md"
-                                v-for="t in p.tags" :key="t">{{ t
+                        <p class="tags flex gap-2 flex-wrap mb-4">
+                            <span class="tag bg-primary text-primary-contrast px-1  rounded-md" v-for="t in p.tags"
+                                :key="t">{{ t
                                 }}</span>
                         </p>
                     </div>

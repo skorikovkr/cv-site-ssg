@@ -96,8 +96,8 @@ onMounted(() => {
                             {{ title }}<span class="h-12 ml-1 border-r-4 border-black dark:border-white blinking" />
                         </span>
                     </div>
-                    <div class="min-h-[38px]">
-                        <ProgressSpinner v-if="isFakeLoading" style="width: 32px; height: 32px" strokeWidth="4"
+                    <div class="min-h-[38px] flex flex-col justify-center xl:justify-end">
+                        <ProgressSpinner v-if="isFakeLoading" class="" style="width: 32px; height: 32px" strokeWidth="4"
                             fill="transparent" animationDuration="5s" />
                         <p v-else class="text-2xl text-center xl:text-end">
                             Frontend <span class="font-bold"

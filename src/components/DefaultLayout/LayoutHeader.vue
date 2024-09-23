@@ -11,6 +11,10 @@ const navLinks = computed(() => [
     {
         'href': '/color-correction',
         'title': 'Color-corr'
+    },
+    {
+        'href': '/metronome',
+        'title': 'Metronome'
     }
 ]);
 </script>
