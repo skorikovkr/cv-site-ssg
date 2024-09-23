@@ -5,7 +5,7 @@ const context = shallowRef()
 const gainNode = shallowRef()
 const buffer = shallowRef()
 //const isPlaying = ref(false)
-const volume = ref(0.1)
+const volume = ref(1)
 let source;
 
 onMounted(async () => {
@@ -25,10 +25,29 @@ onMounted(async () => {
 
 const handlePlayButtonClicked = () => {
     source = context.value.createBufferSource();
-    source.buffer = buffer.value;
+    const repeats = 2;
+    const frameCount = Math.floor(context.value.sampleRate * buffer.value.duration * repeats);
+    const test = context.value.createBuffer(
+        2,
+        frameCount,
+        context.value.sampleRate
+    );
+    const stressFirstIndex = frameCount / 2;
+    for (let channel = 0; channel < 2; channel++) {
+        const nowBuffering = test.getChannelData(channel)
+        const metronomSoundBuffer = buffer.value.getChannelData(channel)
+        for (let i = 0; i < frameCount; i++) {
+            nowBuffering[i] = metronomSoundBuffer[i % (frameCount / 2)] / 2  // last / 2 to lower volume temporary
+            if (i < stressFirstIndex) {
+                nowBuffering[i] *= 2
+            }
+        }
+    }
+    source.buffer = test;
     source.connect(context.value.destination);
     source.loop = true;
     source.start();
+
 }
 
 onUnmounted(() => {
