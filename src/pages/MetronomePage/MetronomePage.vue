@@ -16,7 +16,7 @@ const MetronomeWorkView = defineAsyncComponent(() =>
 
 <template>
     <div class="metronome text-xl">
-        <h1 class="text-3xl font-semibold mb-4">Metronome app</h1>
+        <h1 class="text-3xl font-semibold mb-4">Metronome</h1>
         <p>This is metronome web application.</p>
         <ClientOnly>
             <MetronomeWorkView />
