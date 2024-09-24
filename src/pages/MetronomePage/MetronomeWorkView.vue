@@ -6,7 +6,7 @@ const gainNode = shallowRef()
 const buffer = shallowRef()
 //const isPlaying = ref(false)
 const volume = ref(1)
-let source;
+let source = null;
 
 onMounted(async () => {
     context.value = new AudioContext({
@@ -26,30 +26,55 @@ onMounted(async () => {
 })
 
 const handlePlayButtonClicked = () => {
+    if (source)
+        source.stop();
     source = context.value.createBufferSource();
     const repeats = 2;
-    const frameCount = Math.floor(context.value.sampleRate * buffer.value.duration * repeats);
-    const test = context.value.createBuffer(
+    const bpm = 220;  // 200 and higher is bugged. No stress first beat and approx 2 times slower than intended 
+    const beatDuration = 60 / bpm;
+    const frameCount = context.value.sampleRate * beatDuration * repeats;
+    const beatsSoundBuffer = context.value.createBuffer(
         2,
         frameCount,
         context.value.sampleRate
     );
-    const stressFirstIndex = frameCount / 2;
     const metronomSoundBuffer = buffer.value.getChannelData(0)  // current sound is mono, so first and only channel with index 0
+    const beatFrameCount = metronomSoundBuffer.length;
+    const beatWithSilenceFrameCount = frameCount / repeats;
+    console.log({
+        repeats, bpm, beatDuration, frameCount, beatFrameCount, beatWithSilenceFrameCount
+    });
     for (let channel = 0; channel < 2; channel++) {
-        const nowBuffering = test.getChannelData(channel)
+        let isFirst = true;
+        const nowBuffering = beatsSoundBuffer.getChannelData(channel)
         for (let i = 0; i < frameCount; i++) {
-            nowBuffering[i] = metronomSoundBuffer[i % (frameCount / 2)] / 2  // last / 2 to lower volume temporary
-            if (i < stressFirstIndex) {
-                nowBuffering[i] *= 2
+            if (i % beatWithSilenceFrameCount == 0) {
+                bakeBeatSound(nowBuffering, metronomSoundBuffer, beatFrameCount, i, isFirst)
+                isFirst = false;
             }
         }
     }
-    source.buffer = test;
+    source.buffer = beatsSoundBuffer;
     source.connect(context.value.destination);
     source.loop = true;
     source.start();
+}
 
+const bakeBeatSound = (buffer, metronomSoundBuffer, beatFrameCount, frameIndex, stressBeat) => {
+    let j = 0;
+    let start = frameIndex;
+    let end = frameIndex + beatFrameCount;
+    for (let i = start; i < end; i++) {
+        if (j >= metronomSoundBuffer.length) {
+            break
+        }
+        if (i >= buffer.length) {
+            i = 0;
+            end = metronomSoundBuffer.length - j;
+        }
+        buffer[i] = buffer[i] + metronomSoundBuffer[j] / (stressBeat ? 1 : 10)  // last / 4 to lower volume temporary for developing
+        j++;
+    }
 }
 
 onUnmounted(() => {
