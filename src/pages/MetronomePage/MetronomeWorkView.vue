@@ -3,25 +3,26 @@ import { ref, shallowRef, onUnmounted, watch } from "vue"
 import Checkbox from 'primevue/checkbox'
 import Slider from 'primevue/slider';
 import InputNumber from 'primevue/inputnumber';
+import Button from 'primevue/button';
 import { debounce } from "@/utils/debounce";
 
 const context = shallowRef(null);
 const gainNode = shallowRef();
 const buffer = shallowRef();
 const isPlaying = ref(false);
-const volume = ref(1);
+const volume = ref(50);
 const source = shallowRef(null);
 const stressFirstBeat = ref(true);
 const stressedVolumeRatio = ref(5);
 const bpm = ref(100);
-const repeats = ref(2)
+const repeats = ref(2);
 
 const initContext = async () => {
     context.value = new AudioContext({
         sampleRate: 32000
     });
     gainNode.value = context.value.createGain();
-    gainNode.value.gain.value = volume.value;
+    gainNode.value.gain.value = volume.value / 100;
     gainNode.value.connect(context.value.destination);
     try {
         const response = await fetch("sounds/metronome.wav");
@@ -55,11 +56,12 @@ const updateSettings = debounce(async () => {
         source.value.start()
 }, 500)
 
-watch([stressFirstBeat, bpm, repeats], () => {
+watch([stressFirstBeat, bpm, repeats, volume], () => {
     updateSettings()
 })
 
 const changeAudioSource = () => {
+    gainNode.value.gain.value = volume.value / 100;
     source.value = context.value.createBufferSource();
     const beatDuration = 60 / bpm.value;
     const frameCount = Math.floor(context.value.sampleRate * beatDuration * repeats.value);
@@ -82,7 +84,7 @@ const changeAudioSource = () => {
         }
     }
     source.value.buffer = beatsSoundBuffer;
-    source.value.connect(context.value.destination);
+    source.value.connect(gainNode.value).connect(context.value.destination);
     source.value.loop = true;
 }
 
@@ -105,34 +107,43 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="metronome__work-view flex flex-col gap-4">
-        <div class="flex-auto">
-            <div class="w-56">
+    <div class="metronome__work-view flex flex-col w-64 gap-2">
+        <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-3">
+            <label for="bpm" class="font-bold block mb-2">BPM</label>
+            <InputNumber v-model="bpm" class="mb-4" />
+            <div class="flex items-center">
+                <div class="metronome__bpm-lower-bound-label mr-2 text-sm">30</div>
+                <Slider v-model="bpm" class="w-full mr-4" name="bpm" :min="30" :max="300" />
+                <div class="metronome__bpm-upper-bound-label text-sm">300</div>
+            </div>
+        </div>
+        <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-3">
+            <label for="repeats" class="font-bold block mb-2"> Time signature </label>
+            <InputNumber v-model="repeats" inputId="repeats" mode="decimal" showButtons buttonLayout="horizontal"
+                :min="1" :max="12" class="w-48" fluid>
+                <template #incrementbuttonicon>
+                    <span class="pi pi-plus" :style="{ fontSize: '0.75rem' }" />
+                </template>
+                <template #decrementbuttonicon>
+                    <span class="pi pi-minus" :style="{ fontSize: '0.75rem' }" />
+                </template>
+            </InputNumber>
+        </div>
+        <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-3">
+            <div class="flex items-center">
                 <Checkbox v-model="stressFirstBeat" :binary="true" inputId="stressFirstBeat" name="stressFirstBeat" />
                 <label for="stressFirstBeat" class="ml-2">Stress first beat</label>
             </div>
         </div>
-        <div class="flex">
-            <div class="w-56">
-                <label for="bpm" class="font-bold block mb-2">BPM</label>
-                <InputNumber v-model="bpm" class="mb-4" />
-                <Slider v-model="bpm" class="w-56" name="bpm" :min="30" :max="300" />
+        <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-5 mb-3">
+            <label for="bpm" class="font-bold block mb-2">Volume</label>
+            <div class="flex items-center">
+                <Slider v-model="volume" class="w-full" name="volume" :min="0" :max="200" />
             </div>
         </div>
-        <div class="flex">
-            <div class="w-56">
-                <label for="repeats" class="font-bold block mb-2"> Time signature </label>
-                <InputNumber v-model="repeats" inputId="repeats" mode="decimal" showButtons buttonLayout="horizontal"
-                    :min="1" :max="12" class="w-48" fluid>
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
-            </div>
+        <div>
+            <Button @click="handlePlayButtonClicked" :label="isPlaying ? 'Stop' : 'Start'"
+                :icon="isPlaying ? 'pi pi-stop' : 'pi pi-play'" severity="secondary" />
         </div>
-        <button @click="handlePlayButtonClicked">{{ isPlaying ? 'Stop' : 'Play' }}</button>
     </div>
 </template>
