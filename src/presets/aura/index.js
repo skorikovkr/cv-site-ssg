@@ -9,6 +9,7 @@ import card from './card'
 import divider from './divider'
 import dialog from './dialog'
 import progressspinner from './progressspinner'
+import slider from './slider'
 
 export default {
   global,
@@ -21,5 +22,6 @@ export default {
   card,
   divider,
   dialog,
-  progressspinner
+  progressspinner,
+  slider
 }
