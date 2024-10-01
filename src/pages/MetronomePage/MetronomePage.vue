@@ -20,7 +20,7 @@ const MetronomeWorkView = defineAsyncComponent(() =>
         <p class="mb-1">This is metronome web application.</p>
         <p class="mb-1">Use <i>BPM slider</i> to change tempo.</p>
         <p class="mb-1">Use <i>time signature</i> field to make accent on first beat.</p>
-        <p class="mb-4">Use <i>"Stress first beat"</i> to highlight first beat with louder sound.</p>
+        <p class="mb-4">Click on <i>circles</i> to highlight corresponding beat with louder sound.</p>
         <ClientOnly>
             <MetronomeWorkView />
         </ClientOnly>

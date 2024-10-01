@@ -1,6 +1,5 @@
 <script setup>
 import { ref, shallowRef, onUnmounted, watch } from "vue"
-import Checkbox from 'primevue/checkbox'
 import Slider from 'primevue/slider';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
@@ -8,21 +7,22 @@ import { debounce } from "@/utils/debounce";
 
 const context = shallowRef(null);
 const gainNode = shallowRef();
-const buffer = shallowRef();
+const buffer = shallowRef(null);
 const beatsCirclesTimer = shallowRef();
 const timeSignatureSoundTimer = shallowRef();
 const bakedBuffer = shallowRef(null);
 const isPlaying = ref(false);
 const volume = ref(50);
 const source = shallowRef(null);
-const stressFirstBeat = ref(true);
 const stressedVolumeRatio = ref(5);
 const bpm = ref(100);
 const repeats = ref(2);
 const currentBeat = ref(null);
 const repeatTimeSignatures = ref();
+const error = ref(false);
+const stressedBeats = ref(new Set([0]));
 
-// we are not invoking init in OnMounted hook because we wait any user gesture
+// we are not creating AudioContext in OnMounted hook because we wait any user gesture
 const initContext = async () => {
     context.value = new AudioContext({
         sampleRate: 32000
@@ -35,6 +35,7 @@ const initContext = async () => {
         buffer.value = await context.value.decodeAudioData(await response.arrayBuffer());
     } catch (err) {
         console.error(`Unable to fetch the audio file. Error: ${err.message}`);
+        error.value = true;
     }
 }
 
@@ -72,8 +73,9 @@ const clearTimeSignatureSoundTimer = () => {
 }
 
 const handlePlayButtonClicked = async () => {
-    if (!context.value)
+    if (!context.value || !buffer.value) {
         await initContext();
+    }
     if (!bakeBuffer.value)
         bakeBuffer();
     if (isPlaying.value) {
@@ -96,9 +98,11 @@ const updateSettings = debounce(async () => {
     }
 }, 500)
 
-watch([stressFirstBeat, bpm, repeats], () => {
+watch([stressedBeats, bpm, repeats], () => {
     clearTimeSignatureSoundTimer();
     updateSettings();
+}, {
+    deep: true
 })
 
 watch([volume], () => {
@@ -123,14 +127,14 @@ const bakeBuffer = () => {
         frameCount,
         context.value.sampleRate
     );
-    const metronomSoundBuffer = buffer.value.getChannelData(0)  // current sound is mono, so first and only channel with index 0
+    const metronomSoundBuffer = buffer.value.getChannelData(0);  // current sound is mono, so first and only channel with index 0
     const beatWithSilenceFrameCount = Math.floor(frameCount / repeatTimeSignatures.value / repeats.value);
     for (let channel = 0; channel < 2; channel++) {
         let beatIndex = 0;
         const nowBuffering = beatsSoundBuffer.getChannelData(channel)
         for (let i = 0; i < frameCount; i++) {
             if (i % beatWithSilenceFrameCount == 0) {
-                bakeBeatSound(nowBuffering, metronomSoundBuffer, i, !stressFirstBeat.value || (beatIndex % repeats.value === 0))
+                bakeBeatSound(nowBuffering, metronomSoundBuffer, i, stressedBeats.value.has(beatIndex % repeats.value));
                 beatIndex++;
             }
         }
@@ -151,8 +155,15 @@ const bakeBeatSound = (buffer, metronomSoundBuffer, frameIndex, stressBeat) => {
     }
 }
 
+const handleBeatCircleClick = (beatCircleIndex) => {
+    if (stressedBeats.value.has(beatCircleIndex))
+        stressedBeats.value.delete(beatCircleIndex)
+    else
+        stressedBeats.value.add(beatCircleIndex)
+}
+
 onUnmounted(() => {
-    context.value?.close()
+    context.value?.close();
     if (beatsCirclesTimer.value)
         clearTimeout(beatsCirclesTimer.value);
     if (timeSignatureSoundTimer.value)
@@ -184,13 +195,6 @@ onUnmounted(() => {
                     </template>
                 </InputNumber>
             </div>
-            <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-3">
-                <div class="flex items-center">
-                    <Checkbox v-model="stressFirstBeat" :binary="true" inputId="stressFirstBeat"
-                        name="stressFirstBeat" />
-                    <label for="stressFirstBeat" class="ml-2">Stress first beat</label>
-                </div>
-            </div>
             <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-5 mb-3">
                 <label for="bpm" class="font-bold block mb-2">Volume</label>
                 <div class="flex items-center">
@@ -202,10 +206,17 @@ onUnmounted(() => {
                     :icon="isPlaying ? 'pi pi-stop' : 'pi pi-play'" :severity="isPlaying ? 'danger' : 'secondary'" />
             </div>
         </div>
-        <div class="metronome__beats-circles flex gap-1 justify-center items-center">
-            <div v-for="b in repeats" :key="b" class="rounded-full border-2 size-5 md:size-6" :class="{
-                'bg-red-700 border-red-900': (b === currentBeat)
-            }"></div>
+        <div v-if="error" class="text-red-500 font-bold">
+            Error fetching the metronome sound. Try reloading page.
+        </div>
+        <div v-else class="metronome__beats-circles flex justify-center items-center w-full min-h-7">
+            <div class="flex gap-1 justify-center items-center">
+                <div v-for="b in repeats" :key="b" class="rounded-full border-2" :class="{
+                    'bg-red-700 border-red-900': (b === currentBeat),
+                    'size-6 md:size-5': !stressedBeats.has(b - 1),
+                    'size-7 md:size-6 border-3 border-red-300': stressedBeats.has(b - 1)
+                }" @click="() => handleBeatCircleClick(b - 1)"></div>
+            </div>
         </div>
     </div>
 </template>
