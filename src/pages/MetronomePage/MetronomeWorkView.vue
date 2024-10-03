@@ -17,6 +17,7 @@ const source = shallowRef(null);
 const stressedVolumeRatio = ref(5);
 const bpm = ref(100);
 const repeats = ref(2);
+const length = ref(4);
 const currentBeat = ref(null);
 const repeatTimeSignatures = ref();
 const error = ref(false);
@@ -76,7 +77,7 @@ const handlePlayButtonClicked = async () => {
     if (!context.value || !buffer.value) {
         await initContext();
     }
-    if (!bakeBuffer.value)
+    if (!bakedBuffer.value)
         bakeBuffer();
     if (isPlaying.value) {
         source.value?.stop();
@@ -98,7 +99,31 @@ const updateSettings = debounce(async () => {
     }
 }, 500)
 
-watch([stressedBeats, bpm, repeats], () => {
+const handleLengthInputClick = (sign) => {
+    if (sign === '+') {
+        length.value = 8;
+    }
+    if (sign === '-') {
+        length.value = 4;
+    }
+}
+
+const handleRepeatsInputClick = (sign) => {
+    let newVal = repeats.value;
+    if (sign === '+') {
+        newVal++;
+    }
+    if (sign === '-') {
+        newVal--;
+    }
+    if (newVal < 1)
+        newVal = 1
+    if (newVal > 12)
+        newVal = 12
+    repeats.value = newVal;
+}
+
+watch([stressedBeats, bpm, repeats, length], () => {
     clearTimeSignatureSoundTimer();
     updateSettings();
 }, {
@@ -185,15 +210,28 @@ onUnmounted(() => {
             </div>
             <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-3">
                 <label for="repeats" class="font-bold block mb-2"> Time signature </label>
-                <InputNumber v-model="repeats" inputId="repeats" mode="decimal" showButtons buttonLayout="horizontal"
-                    :min="1" :max="12" class="w-48" fluid>
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" :style="{ fontSize: '0.75rem' }" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" :style="{ fontSize: '0.75rem' }" />
-                    </template>
-                </InputNumber>
+                <div class="flex items-center mb-1">
+                    <div :style="{ fontSize: '0.75rem' }"
+                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-r-none pi pi-minus"
+                        @click="() => handleRepeatsInputClick('-')">
+                    </div>
+                    <div class="px-4 border-t border-b order-surface-300 dark:border-surface-700">{{ repeats }}</div>
+                    <div :style="{ fontSize: '0.75rem' }"
+                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-l-none pi pi-plus"
+                        @click="() => handleRepeatsInputClick('+')">
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div :style="{ fontSize: '0.75rem' }"
+                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-r-none pi pi-minus"
+                        @click="() => handleLengthInputClick('-')">
+                    </div>
+                    <div class="px-4 border-t border-b order-surface-300 dark:border-surface-700">{{ length }}</div>
+                    <div :style="{ fontSize: '0.75rem' }"
+                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-l-none pi pi-plus"
+                        @click="() => handleLengthInputClick('+')">
+                    </div>
+                </div>
             </div>
             <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-5 mb-3">
                 <label for="bpm" class="font-bold block mb-2">Volume</label>
