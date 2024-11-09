@@ -17,7 +17,7 @@ const source = shallowRef(null);
 const stressedVolumeRatio = ref(5);
 const bpm = ref(100);
 const repeats = ref(2);
-const length = ref(4);
+//const length = ref(4);
 const currentBeat = ref(null);
 const repeatTimeSignatures = ref();
 const error = ref(false);
@@ -99,14 +99,14 @@ const updateSettings = debounce(async () => {
     }
 }, 500)
 
-const handleLengthInputClick = (sign) => {
-    if (sign === '+') {
-        length.value = 8;
-    }
-    if (sign === '-') {
-        length.value = 4;
-    }
-}
+// const handleLengthInputClick = (sign) => {
+//     if (sign === '+') {
+//         length.value = 8;
+//     }
+//     if (sign === '-') {
+//         length.value = 4;
+//     }
+// }
 
 const handleRepeatsInputClick = (sign) => {
     let newVal = repeats.value;
@@ -221,7 +221,7 @@ onUnmounted(() => {
                         @click="() => handleRepeatsInputClick('+')">
                     </div>
                 </div>
-                <div class="flex items-center">
+                <!-- <div class="flex items-center">
                     <div :style="{ fontSize: '0.75rem' }"
                         class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-r-none pi pi-minus"
                         @click="() => handleLengthInputClick('-')">
@@ -231,7 +231,7 @@ onUnmounted(() => {
                         class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-l-none pi pi-plus"
                         @click="() => handleLengthInputClick('+')">
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-5 mb-3">
                 <label for="bpm" class="font-bold block mb-2">Volume</label>
