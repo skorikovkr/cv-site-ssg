@@ -123,7 +123,7 @@ const handleRepeatsInputClick = (sign) => {
     repeats.value = newVal;
 }
 
-watch([stressedBeats, bpm, repeats, length], () => {
+watch([stressedBeats, bpm, repeats], () => {
     clearTimeSignatureSoundTimer();
     updateSettings();
 }, {
