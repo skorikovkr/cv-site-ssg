@@ -41,8 +41,8 @@ const contacts = shallowRef([
     title: 'Projects',
     icon: Contact,
     items: [
-      { title: 'Telegram', href: 'https://github.com/skorikovkr', icon: TelegramIcon },
-      { title: 'GitHub', href: 'https://t.me/skorikovkr', icon: GitHubIcon },
+      { title: 'Telegram', href: 'https://t.me/skorikovkr', icon: TelegramIcon },
+      { title: 'GitHub', href: 'https://github.com/skorikovkr', icon: GitHubIcon },
       { title: 'Steam', href: 'https://steamcommunity.com/id/batiatrus', icon: SteamIcon },
     ],
   },
