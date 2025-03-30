@@ -7,14 +7,8 @@ const projects = ref([
     title: 'Blog',
     about: 'My personal blog. This is my first attempt in SSR.',
     sources: [
-      {
-        link: 'https://github.com/skorikovkr/blog-frontend',
-        linkTitle: 'Source (frontend)',
-      },
-      {
-        link: 'https://github.com/skorikovkr/blog-backend',
-        linkTitle: 'Source (backend)',
-      },
+      { link: 'https://github.com/skorikovkr/blog-frontend', linkTitle: 'Source (frontend)' },
+      { link: 'https://github.com/skorikovkr/blog-backend', linkTitle: 'Source (backend)' },
     ],
     tags: ['Nuxt', 'Laravel', 'Tailwind', 'PrimeVue', 'Pinia', 'MySQL'],
     imageSrc: '/images/project-blog.png',
@@ -23,14 +17,8 @@ const projects = ref([
     title: 'CRM system',
     about: 'Graduation work. CRM system for furniture factory.',
     sources: [
-      {
-        link: 'https://github.com/skorikovkr/crm-frontend',
-        linkTitle: 'Source (frontend)',
-      },
-      {
-        link: 'https://github.com/skorikovkr/crm-backend',
-        linkTitle: 'Source (backend)',
-      },
+      { link: 'https://github.com/skorikovkr/crm-frontend', linkTitle: 'Source (frontend)' },
+      { link: 'https://github.com/skorikovkr/crm-backend', linkTitle: 'Source (backend)' },
     ],
     tags: ['Nuxt', 'Pinia', 'MySQL', 'Laravel', 'Tailwind', 'PrimeVue'],
     imageSrc: '/images/project-crm.png',
@@ -39,15 +27,8 @@ const projects = ref([
     title: 'Color correction app',
     about: 'Color correction web application for images.',
     sources: [
-      {
-        link: 'https://github.com/skorikovkr/color-correction',
-        linkTitle: 'Source',
-      },
-      {
-        link: '/color-correction',
-        useRouterLink: true,
-        linkTitle: 'Watch',
-      },
+      { link: 'https://github.com/skorikovkr/color-correction', linkTitle: 'Source' },
+      { link: '/color-correction', useRouterLink: true, linkTitle: 'Watch' },
     ],
     tags: ['Tailwind', 'Vue'],
     imageSrc: '/images/project-color-corr.png',
@@ -55,24 +36,14 @@ const projects = ref([
   {
     title: 'This site',
     about: 'My site prerendered with SSG (static site generation).',
-    sources: [
-      {
-        link: 'https://github.com/skorikovkr/cv-site-ssg',
-        linkTitle: 'Source',
-      },
-    ],
+    sources: [{ link: 'https://github.com/skorikovkr/cv-site-ssg', linkTitle: 'Source' }],
     tags: ['Tailwind', 'Vue', 'Shadcn', 'Vite-SSG'],
     imageSrc: '/images/project-cv.png',
   },
   {
     title: 'Metronome',
     about: 'I was playing with sound buffer and AudioContext, so I made this app.',
-    sources: [
-      {
-        link: 'https://github.com/skorikovkr/cv-site-ssg',
-        linkTitle: 'Source',
-      },
-    ],
+    sources: [{ link: 'https://github.com/skorikovkr/cv-site-ssg', linkTitle: 'Source' }],
     tags: ['Tailwind', 'Vue', 'Shadcn'],
     imageSrc: '/images/metronome.jpg',
   },
@@ -86,7 +57,7 @@ const projects = ref([
       <li
         v-for="p in projects"
         :key="p.title"
-        class="my-projects__item mb-4 pb-4 border-slate-200 dark:border-slate-100 border-b-[1px] last:border-none"
+        class="my-projects__item mb-4 pb-4 border-primary border-b-[1px] last:border-none"
       >
         <article class="md:grid grid-cols-2 md:items-center">
           <div class="my-projects__text">

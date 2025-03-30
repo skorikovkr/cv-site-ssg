@@ -4,11 +4,9 @@ import { useHead } from '@unhead/vue'
 import { pageMeta } from './meta'
 import MyStack from './MyStack.vue'
 import MyProjects from './MyProjects.vue'
+import HomePageFooter from './HomePageFooter.vue'
 
-useHead({
-  title: 'Home - skorikovkr',
-  meta: pageMeta,
-})
+useHead({ title: 'Home - skorikovkr', meta: pageMeta })
 </script>
 
 <template>
@@ -16,5 +14,6 @@ useHead({
     <HeroSection />
     <MyStack />
     <MyProjects />
+    <HomePageFooter />
   </div>
 </template>

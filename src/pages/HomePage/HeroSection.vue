@@ -65,7 +65,7 @@ onMounted(() => {
     <ClientOnly>
       <div class="flex justify-between flex-col-reverse xl:flex-row mt-10 max-w-7xl">
         <div class="flex flex-col gap-4 xl:min-w-[630px]">
-          <div class="bg-slate-700 rounded-lg">
+          <div class="bg-[#18181B] rounded-lg">
             <div
               class="text-end text-slate-200 font-medium text-md px-2 py-1 border-b-[1px] border-slate-400"
             >
@@ -77,7 +77,7 @@ onMounted(() => {
                             class="h-12 ml-1 border-r-2 border-white"
           /></pre>
           </div>
-          <div class="bg-slate-700 rounded-lg">
+          <div class="bg-[#18181B] rounded-lg">
             <div
               class="text-end text-slate-200 font-medium text-md px-2 py-1 border-b-[1px] border-slate-400"
             >
