@@ -1,95 +1,66 @@
-@import './base.css';
-@import 'primeicons/primeicons.css';
-
-/* Primary and Surface Palettes */
-:root {
-  --p-primary-50: var(--p-surface-50);
-  --p-primary-100: var(--p-surface-100);
-  --p-primary-200: var(--p-surface-200);
-  --p-primary-300: var(--p-surface-300);
-  --p-primary-400: var(--p-surface-400);
-  --p-primary-500: var(--p-surface-500);
-  --p-primary-600: var(--p-surface-600);
-  --p-primary-700: var(--p-surface-700);
-  --p-primary-800: var(--p-surface-800);
-  --p-primary-900: var(--p-surface-900);
-  --p-primary-950: var(--p-surface-950);
-  --p-surface-0: #ffffff;
-  --p-surface-50: #f8fafc;
-  --p-surface-100: #f1f5f9;
-  --p-surface-200: #e2e8f0;
-  --p-surface-300: #cbd5e1;
-  --p-surface-400: #94a3b8;
-  --p-surface-500: #64748b;
-  --p-surface-600: #475569;
-  --p-surface-700: #334155;
-  --p-surface-800: #1e293b;
-  --p-surface-900: #0f172a;
-  --p-surface-950: #020617;
-  --p-content-border-radius: 6px;
-}
-
-/* Light Mode */
-:root {
-  --p-primary-color: var(--p-primary-500);
-  --p-primary-contrast-color: var(--p-surface-0);
-  --p-primary-hover-color: var(--p-primary-600);
-  --p-primary-active-color: var(--p-primary-700);
-  --p-content-border-color: var(--p-surface-200);
-  --p-content-hover-background: var(--p-surface-100);
-  --p-content-hover-color: var(--p-surface-800);
-  --p-highlight-background: var(--p-primary-50);
-  --p-highlight-color: var(--p-primary-700);
-  --p-highlight-focus-background: var(--p-primary-100);
-  --p-highlight-focus-color: var(--p-primary-800);
-  --p-text-color: var(--p-surface-700);
-  --p-text-hover-color: var(--p-surface-800);
-  --p-text-muted-color: var(--p-surface-500);
-  --p-text-hover-muted-color: var(--p-surface-600);
-}
-
-/* 
- * Dark Mode
- * Change the .p-dark to match the darkMode in tailwind.config.
- * For example; 
- *  darkMode: ['selector', '[class*="app-dark"]'] 
- *  should match;
- * :root.app-dark
-*/
-:root.p-dark {
-  --p-primary-color: var(--p-primary-400);
-  --p-primary-contrast-color: var(--p-surface-900);
-  --p-primary-hover-color: var(--p-primary-300);
-  --p-primary-active-color: var(--p-primary-200);
-  --p-content-border-color: var(--p-surface-700);
-  --p-content-hover-background: var(--p-surface-800);
-  --p-content-hover-color: var(--p-surface-0);
-  --p-highlight-background: color-mix(in srgb, var(--p-primary-400), transparent 84%);
-  --p-highlight-color: rgba(255, 255, 255, 0.87);
-  --p-highlight-focus-background: color-mix(in srgb, var(--p-primary-400), transparent 76%);
-  --p-highlight-focus-color: rgba(255, 255, 255, 0.87);
-  --p-text-color: var(--p-surface-0);
-  --p-text-hover-color: var(--p-surface-0);
-  --p-text-muted-color: var(--p-surface-400);
-  --p-text-hover-muted-color: var(--p-surface-300);
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/Inter.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: 'Inter-ExtraBold';
-  font-style: normal;
-  src: url(/fonts/Inter-ExtraBold.ttf) format('truetype');
-}
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @layer base {
-  html {
-    font-family: Inter, 'Segoe UI', Roboto, sans-serif;
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%
+  }
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
