@@ -1,26 +1,26 @@
 export const pageMeta = [
   {
     name: 'description',
-    content: 'Online metronome web application.'
+    content: 'Online metronome web application.',
   },
   {
     property: 'og:type',
-    content: 'website'
+    content: 'website',
   },
   {
     property: 'og:url',
-    content: 'https://skorikovkr.ru/metronome'
+    content: 'https://skorikovkr.ru/metronome',
   },
   {
     property: 'og:image',
-    content: 'https://skorikovkr.ru/metronome-og-image.png'
+    content: 'https://skorikovkr.ru/metronome.jpg',
   },
   {
     property: 'og:title',
-    content: 'Metronome - skorikovkr'
+    content: 'Metronome - skorikovkr',
   },
   {
     property: 'og:description',
-    content: 'Online metronome web application.'
-  }
+    content: 'Online metronome web application.',
+  },
 ]

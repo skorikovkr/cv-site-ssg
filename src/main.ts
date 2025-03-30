@@ -14,9 +14,8 @@ export const createApp = ViteSSG(App, { routes }, ({ app, router, initialState }
   if (import.meta.env.SSR) initialState.pinia = pinia.state.value
   else pinia.state.value = initialState.pinia || {}
 
-  router.beforeEach((to, from, next) => {
+  router.beforeEach(() => {
     const store = useRootStore(pinia)
     if (!store.ready) store.initialize()
-    next()
   })
 })
