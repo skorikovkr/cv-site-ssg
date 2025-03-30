@@ -98,11 +98,15 @@ onMounted(() => {
             </h1>
           </div>
           <div class="min-h-[38px] flex flex-col justify-center xl:justify-end">
-            <Loader
+            <div
               v-if="isFakeLoading"
-              class=""
-              size="32px"
-            />
+              class="flex justify-center xl:justify-end"
+            >
+              <Loader
+                class=""
+                size="32px"
+              />
+            </div>
             <p
               v-else
               class="text-2xl text-center xl:text-end"
@@ -111,14 +115,16 @@ onMounted(() => {
               <span
                 class="font-bold"
                 :class="{ 'text-gradient': isGradientApplied }"
-                >developer</span
               >
+                developer
+              </span>
             </p>
             <a
               href="#contacts"
               class="block text-xl text-center xl:text-end text-gray-400 font-semibold underline"
-              >// goto contacts</a
             >
+              // goto contacts
+            </a>
           </div>
         </div>
       </div>

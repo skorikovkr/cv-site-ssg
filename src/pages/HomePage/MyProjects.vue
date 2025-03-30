@@ -1,4 +1,5 @@
 <script setup>
+import { Badge } from '@/components/ui/badge'
 import { ref } from 'vue'
 
 const projects = ref([
@@ -60,8 +61,20 @@ const projects = ref([
         linkTitle: 'Source',
       },
     ],
-    tags: ['Tailwind', 'Vue', 'PrimeVue', 'Vite-SSG'],
+    tags: ['Tailwind', 'Vue', 'Shadcn', 'Vite-SSG'],
     imageSrc: '/images/project-cv.png',
+  },
+  {
+    title: 'Metronome',
+    about: 'I was playing with sound buffer and AudioContext, so I made this app.',
+    sources: [
+      {
+        link: 'https://github.com/skorikovkr/cv-site-ssg',
+        linkTitle: 'Source',
+      },
+    ],
+    tags: ['Tailwind', 'Vue', 'Shadcn'],
+    imageSrc: '/images/metronome.jpg',
   },
 ])
 </script>
@@ -80,22 +93,39 @@ const projects = ref([
             <h3 class="text-2xl font-semibold mb-2">{{ p.title }}</h3>
             <p class="mb-1">{{ p.about }}</p>
             <p class="reference mb-3 italic underline">
-              <template v-for="s in p.sources" :key="s.link">
-                <RouterLink v-if="s.useRouterLink" :to="s.link">{{ s.linkTitle }}</RouterLink>
-                <a v-else target="_blank" class="mr-2" :href="s.link">{{ s.linkTitle }}</a>
+              <template
+                v-for="s in p.sources"
+                :key="s.link"
+              >
+                <RouterLink
+                  v-if="s.useRouterLink"
+                  :to="s.link"
+                  >{{ s.linkTitle }}</RouterLink
+                >
+                <a
+                  v-else
+                  target="_blank"
+                  class="mr-2"
+                  :href="s.link"
+                  >{{ s.linkTitle }}</a
+                >
               </template>
             </p>
             <p class="tags flex gap-2 flex-wrap mb-4">
-              <span
-                class="tag bg-primary text-primary-contrast px-1 rounded-md"
+              <Badge
                 v-for="t in p.tags"
                 :key="t"
-                >{{ t }}</span
               >
+                {{ t }}
+              </Badge>
             </p>
           </div>
           <div class="my-projects__image justify-self-end">
-            <img :src="p.imageSrc" :alt="p.title" class="rounded-md shadow-md max-h-60" />
+            <img
+              :src="p.imageSrc"
+              :alt="p.title"
+              class="rounded-md shadow-md max-h-60"
+            />
           </div>
         </article>
       </li>

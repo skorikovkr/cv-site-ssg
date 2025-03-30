@@ -108,28 +108,6 @@ const updateSettings = debounce(async () => {
   }
 }, 500)
 
-// const handleLengthInputClick = (sign) => {
-//     if (sign === '+') {
-//         length.value = 8;
-//     }
-//     if (sign === '-') {
-//         length.value = 4;
-//     }
-// }
-
-const handleRepeatsInputClick = (sign) => {
-  let newVal = repeats.value
-  if (sign === '+') {
-    newVal++
-  }
-  if (sign === '-') {
-    newVal--
-  }
-  if (newVal < 1) newVal = 1
-  if (newVal > 12) newVal = 12
-  repeats.value = newVal
-}
-
 watch(
   [stressedBeats, bpm, repeats],
   () => {
@@ -185,8 +163,8 @@ const bakeBuffer = () => {
 
 const bakeBeatSound = (buffer, metronomSoundBuffer, frameIndex, stressBeat) => {
   let j = 0
-  let start = frameIndex
-  let end = frameIndex + metronomSoundBuffer.length
+  const start = frameIndex
+  const end = frameIndex + metronomSoundBuffer.length
   for (let i = start; i < end; i++) {
     if (j >= metronomSoundBuffer.length) {
       break
@@ -217,7 +195,6 @@ onUnmounted(() => {
           class="font-bold block mb-2"
           >BPM</label
         >
-
         <NumberField
           v-model="bpm"
           id="bpm"
@@ -251,32 +228,19 @@ onUnmounted(() => {
         >
           Time signature
         </label>
-        <div class="flex items-center mb-1">
-          <div
-            :style="{ fontSize: '0.75rem' }"
-            class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-r-none pi pi-minus"
-            @click="() => handleRepeatsInputClick('-')"
-          ></div>
-          <div class="px-4 border-t border-b order-surface-300 dark:border-surface-700">
-            {{ repeats }}
-          </div>
-          <div
-            :style="{ fontSize: '0.75rem' }"
-            class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-l-none pi pi-plus"
-            @click="() => handleRepeatsInputClick('+')"
-          ></div>
-        </div>
-        <!-- <div class="flex items-center">
-                    <div :style="{ fontSize: '0.75rem' }"
-                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-r-none pi pi-minus"
-                        @click="() => handleLengthInputClick('-')">
-                    </div>
-                    <div class="px-4 border-t border-b order-surface-300 dark:border-surface-700">{{ length }}</div>
-                    <div :style="{ fontSize: '0.75rem' }"
-                        class="cursor-pointer p-2 border order-surface-300 dark:border-surface-700 rounded-lg rounded-l-none pi pi-plus"
-                        @click="() => handleLengthInputClick('+')">
-                    </div>
-                </div> -->
+        <NumberField
+          v-model="repeats"
+          :min="1"
+          :max="12"
+          id="bpm"
+          class="mb-4"
+        >
+          <NumberFieldContent>
+            <NumberFieldDecrement />
+            <NumberFieldInput />
+            <NumberFieldIncrement />
+          </NumberFieldContent>
+        </NumberField>
       </div>
       <div class="border-slate-200 dark:border-slate-100 border-b-[1px] pb-5 mb-3">
         <label
@@ -296,10 +260,11 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="flex justify-center">
-        <Button @click="handlePlayButtonClicked"
-          ><Pause v-if="isPlaying" /><Play v-else /><span></span
-          >{{ isPlaying ? 'Stop' : 'Start' }}</Button
-        >
+        <Button @click="handlePlayButtonClicked">
+          <Pause v-if="isPlaying" />
+          <Play v-else />
+          <span>{{ isPlaying ? 'Stop' : 'Start' }}</span>
+        </Button>
       </div>
     </div>
     <div
@@ -318,7 +283,7 @@ onUnmounted(() => {
           :key="b"
           class="rounded-full border-2"
           :class="{
-            'bg-red-700 border-red-900': b === currentBeat,
+            'bg-red-700 border-red-700': b === currentBeat,
             'size-6 md:size-5': !stressedBeats.has(b - 1),
             'size-7 md:size-6 border-3 border-red-300': stressedBeats.has(b - 1),
           }"

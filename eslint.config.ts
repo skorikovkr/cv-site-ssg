@@ -18,7 +18,17 @@ export default defineConfigWithVueTs(
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
 
+  {
+    name: 'vue/multi-word-component-name',
+    ignores: ['**/components/ui/**'],
+  },
+
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
   skipFormatting,
+  {
+    rules: {
+      'vue/block-lang': 'off',
+    },
+  },
 )
