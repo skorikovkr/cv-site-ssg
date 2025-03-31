@@ -38,7 +38,7 @@ const navLinks = ref([
 
 const contacts = shallowRef([
   {
-    title: 'Projects',
+    title: 'Contacts',
     icon: Contact,
     items: [
       { title: 'Telegram', href: 'https://t.me/skorikovkr', icon: TelegramIcon },
@@ -106,12 +106,7 @@ const contacts = shallowRef([
               </CollapsibleContent>
             </SidebarMenuItem>
           </Collapsible>
-        </SidebarMenu>
-      </SidebarGroup>
 
-      <SidebarGroup>
-        <SidebarGroupLabel>Contacts</SidebarGroupLabel>
-        <SidebarMenu>
           <Collapsible
             v-for="item in contacts"
             :key="item.title"
@@ -159,7 +154,6 @@ const contacts = shallowRef([
         </SidebarMenu>
       </SidebarGroup>
     </SidebarContent>
-    <SidebarRail />
 
     <SidebarFooter>
       <SidebarMenu>

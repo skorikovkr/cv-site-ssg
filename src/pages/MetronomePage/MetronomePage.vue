@@ -14,9 +14,9 @@ const MetronomeWorkView = defineAsyncComponent(() => import('./MetronomeWorkView
 <template>
   <div class="metronome">
     <h1 class="text-3xl font-semibold mb-4">Metronome</h1>
-    <p class="mb-1">This is metronome web application.</p>
-    <p class="mb-1">Use <i>BPM slider</i> to change tempo.</p>
-    <p class="mb-1">Use <i>time signature</i> field change number of beats.</p>
+    <p>This is metronome web application.</p>
+    <p>Use <i>BPM slider</i> to change tempo.</p>
+    <p>Use <i>time signature</i> field change number of beats.</p>
     <p class="mb-4">Click on <i>circles</i> to highlight corresponding beat with louder sound.</p>
     <ClientOnly>
       <MetronomeWorkView />

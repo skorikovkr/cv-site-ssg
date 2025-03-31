@@ -261,8 +261,14 @@ onUnmounted(() => {
       </div>
       <div class="flex justify-center">
         <Button @click="handlePlayButtonClicked">
-          <Pause v-if="isPlaying" />
-          <Play v-else />
+          <Pause
+            v-if="isPlaying"
+            fill="currentColor"
+          />
+          <Play
+            v-else
+            fill="currentColor"
+          />
           <span>{{ isPlaying ? 'Stop' : 'Start' }}</span>
         </Button>
       </div>
