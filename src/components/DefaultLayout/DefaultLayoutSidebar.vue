@@ -3,7 +3,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarRail,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -13,17 +12,28 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarFooter,
+  useSidebar,
 } from '@/components/ui/sidebar'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { SquareTerminal, Home, ChevronRight, Contact } from 'lucide-vue-next'
-import DefaultLayoutSidebarHeader from './DefaultLayoutSiedbarHeader.vue'
+import DefaultLayoutSidebarHeader from './DefaultLayoutSidebarHeader.vue'
 import { ref, shallowRef } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
 import ColorModePicker from '../ColorModePicker.vue'
 import TelegramIcon from '../icons/TelegramIcon.vue'
 import GitHubIcon from '../icons/GitHubIcon.vue'
 import SteamIcon from '../icons/SteamIcon.vue'
+
+const router = useRouter()
+const { isMobile, setOpenMobile } = useSidebar()
+
+function handleLinkClick(routeName: string) {
+  if (isMobile.value) {
+    setOpenMobile(false)
+  }
+  router.push({ name: routeName })
+}
 
 const navLinks = ref([
   {
@@ -63,10 +73,13 @@ const contacts = shallowRef([
               tooltip="Home"
               as-child
             >
-              <RouterLink :to="{ name: 'Home' }">
+              <div
+                class="cursor-pointer"
+                @click="handleLinkClick('Home')"
+              >
                 <Home />
                 <span>Home</span>
-              </RouterLink>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
 
@@ -97,9 +110,12 @@ const contacts = shallowRef([
                     :key="subItem.title"
                   >
                     <SidebarMenuSubButton as-child>
-                      <RouterLink :to="{ name: subItem.routeName }">
+                      <div
+                        class="cursor-pointer"
+                        @click="handleLinkClick(subItem.routeName)"
+                      >
                         <span>{{ subItem.title }}</span>
-                      </RouterLink>
+                      </div>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -158,12 +174,9 @@ const contacts = shallowRef([
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          >
+          <div class="p-2">
             <ColorModePicker />
-          </SidebarMenuButton>
+          </div>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarFooter>
