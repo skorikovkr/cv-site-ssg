@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/sidebar'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { SquareTerminal, Home, ChevronRight, Contact } from 'lucide-vue-next'
+import { SquareTerminal, Home, ChevronRight, Contact, Mail } from 'lucide-vue-next'
 import DefaultLayoutSidebarHeader from './DefaultLayoutSidebarHeader.vue'
 import { ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
@@ -54,6 +54,7 @@ const contacts = shallowRef([
       { title: 'Telegram', href: 'https://t.me/skorikovkr', icon: TelegramIcon },
       { title: 'GitHub', href: 'https://github.com/skorikovkr', icon: GitHubIcon },
       { title: 'Steam', href: 'https://steamcommunity.com/id/batiatrus', icon: SteamIcon },
+      { title: 'Email', href: 'mailto:skorikovkr@gmail.com', icon: Mail },
     ],
   },
 ])

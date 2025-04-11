@@ -8,7 +8,7 @@ import ColorCorrectionMenu from './ColorCorrectionMenu.vue'
 import ToggleGroup from '@/components/ui/toggle-group/ToggleGroup.vue'
 import ToggleGroupItem from '@/components/ui/toggle-group/ToggleGroupItem.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
-import { Maximize, ZoomIn, ZoomOut } from 'lucide-vue-next'
+import { ChevronsLeft, ChevronsRight, Maximize, ZoomIn, ZoomOut } from 'lucide-vue-next'
 import Button from '@/components/ui/button/Button.vue'
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
@@ -40,6 +40,7 @@ const resizeObserver = shallowRef(
     }
   }),
 )
+const showCurveCanvas = ref(true)
 
 function resizeCanvas(newWidth, newHeight) {
   canvasWidth.value = newWidth
@@ -240,8 +241,15 @@ function handleChangeMode(mode) {
       class="color-correction__canvas flex gap-2"
       style="position: relative; height: calc(100vh - 144px)"
     >
-      <Card class="color-correction__tools absolute top-1 right-1">
+      <Card
+        v-show="showCurveCanvas"
+        class="color-correction__tools absolute top-1 right-1"
+      >
         <CardContent class="p-2">
+          <ChevronsRight
+            class="ml-auto mb-2 cursor-pointer"
+            @click="showCurveCanvas = false"
+          />
           <CurveCanvas
             ref="curveCanvas"
             :colorHistogram="colorCount"
@@ -276,6 +284,13 @@ function handleChangeMode(mode) {
           </div>
         </CardFooter>
       </Card>
+      <div
+        v-if="!showCurveCanvas"
+        class="absolute top-3 right-3"
+        style="color: white"
+      >
+        <ChevronsLeft @click="showCurveCanvas = true" />
+      </div>
       <div
         ref="imageCanvasContainer"
         style="overflow: hidden; width: 100%; height: 100%"

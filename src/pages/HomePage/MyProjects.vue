@@ -28,7 +28,7 @@ const projects = ref([
     about: 'Color correction web application for images.',
     sources: [
       { link: 'https://github.com/skorikovkr/color-correction', linkTitle: 'Source' },
-      { link: '/color-correction', useRouterLink: true, linkTitle: 'Watch' },
+      { link: '/color-correction', useRouterLink: true, linkTitle: 'Demo' },
     ],
     tags: ['Tailwind', 'Vue'],
     imageSrc: '/images/project-color-corr.png',
@@ -43,7 +43,10 @@ const projects = ref([
   {
     title: 'Metronome',
     about: 'I was playing with sound buffer and AudioContext, so I made this app.',
-    sources: [{ link: 'https://github.com/skorikovkr/cv-site-ssg', linkTitle: 'Source' }],
+    sources: [
+      { link: 'https://github.com/skorikovkr/cv-site-ssg', linkTitle: 'Source' },
+      { link: '/metronome', useRouterLink: true, linkTitle: 'Demo' },
+    ],
     tags: ['Tailwind', 'Vue', 'Shadcn'],
     imageSrc: '/images/metronome.jpg',
   },
