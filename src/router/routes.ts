@@ -3,6 +3,7 @@ import ColorCorrectorPage from '@/pages/ColorCorrectionPage/ColorCorrectorPage.v
 import MetronomePage from '@/pages/MetronomePage/MetronomePage.vue'
 import type { RouteRecordRaw } from 'vue-router'
 import ProjectLayout from '@/components/ProjectLayout.vue'
+import ShaderGraphPage from '@/pages/ShaderGraphPage/ShaderGraphPage.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'Home', component: HomePage, meta: { breadcrumbs: ['Home'] } },
@@ -17,6 +18,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Metronome',
     component: MetronomePage,
     meta: { breadcrumbs: ['Projects', 'Metronome app'] },
+  },
+  {
+    path: '/shader-graph',
+    name: 'ShaderGraph',
+    component: ShaderGraphPage,
+    meta: { breadcrumbs: ['Projects', 'Shader graph'], layout: ProjectLayout },
   },
 ]
 

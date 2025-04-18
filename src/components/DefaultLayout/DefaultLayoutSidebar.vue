@@ -42,6 +42,7 @@ const navLinks = ref([
     items: [
       { title: 'Color correction', routeName: 'ColorCorrection' },
       { title: 'Metronome', routeName: 'Metronome' },
+      { title: 'Shader graph', routeName: 'ShaderGraph' },
     ],
   },
 ])
