@@ -16,9 +16,13 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useShaderGraphStore } from '../ShaderGraphStore'
+import { storeToRefs } from 'pinia'
 
-const functions = inject('functions')
+const shaderGraphStore = useShaderGraphStore()
+
+const { functions } = storeToRefs(shaderGraphStore)
 
 const customFunctions = computed(() =>
   (Object.keys(functions.value).filter((f) => f !== 'main') ?? []).map((k) => functions.value[k]),

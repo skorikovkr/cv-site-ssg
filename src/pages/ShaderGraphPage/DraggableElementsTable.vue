@@ -86,57 +86,38 @@
 import { useThrottleFn } from '@vueuse/core'
 import { computed, onMounted, onUnmounted, provide, ref, toValue, watch } from 'vue'
 import DraggableElement from './DraggableElement.vue'
-import { GenerateGlslCode } from './utils/GenerateGlslCode'
 import SVGWireGroup from './SVGWireGroup.vue'
-import { getRandInt } from './utils/GetRandInt'
-import { NodeTypesMap } from './utils/NodeTypesMap'
 import { useShaderGraphStore } from './ShaderGraphStore'
 import { storeToRefs } from 'pinia'
 
-const props = defineProps(['initialFunctions', 'initialNodesCoords'])
-
 const shaderGraphStore = useShaderGraphStore()
 
-const { originPoint } = storeToRefs(shaderGraphStore)
+const {
+  originPoint,
+  isPanning,
+  cursorX,
+  cursorY,
+  functions,
+  nodesCoords,
+  currentFunctionId,
+  newFunction,
+  newWire,
+  wires,
+  selectedWire,
+  selectedNode,
+  result,
+} = storeToRefs(shaderGraphStore)
 
-const functions = ref(toValue(props.initialFunctions))
-const nodesCoords = ref(toValue(props.initialNodesCoords))
-const newWire = ref(null)
-const currentFunctionId = ref('main')
 const el = ref()
 const startOriginX = ref(0)
 const startOriginY = ref(0)
 const startX = ref(0)
 const startY = ref(0)
-const cursorX = ref(0)
-const cursorY = ref(0)
-const isPanning = ref(false)
 const draggingNodeId = ref(null)
 const draggingPointerCoords = ref({
   x: 0,
   y: 0,
 })
-const newFunction = ref<{
-  id: null | string
-  name: string
-  inputTypes: string[]
-  inputsNames: string[]
-  output: string | null
-}>({
-  id: null,
-  name: '',
-  inputTypes: [],
-  inputsNames: [],
-  output: null,
-})
-
-provide('functions', functions)
-provide('nodesCoords', nodesCoords)
-provide('cursorPosition', {
-  cursorX,
-  cursorY,
-})
-provide('isPanning', isPanning)
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
@@ -147,25 +128,8 @@ onUnmounted(() => {
 })
 
 function handleAddFunction() {
-  let id = `function${getRandInt(0, 999999)}`
-  while (Object.keys(functions.value).find((k) => k === id)) {
-    id = `function${getRandInt(0, 999999)}`
-  }
-  newFunction.value.id = id
-  functions.value[id] = {
-    ...newFunction.value,
-    nodes: {},
-  }
-  nodesCoords.value[id] = {
-    nodes: {},
-  }
-  newFunction.value = {
-    id: null,
-    name: '',
-    inputTypes: [],
-    inputsNames: [],
-    output: null,
-  }
+  shaderGraphStore.addFunction(newFunction.value)
+  shaderGraphStore.resetNewFunction()
 }
 
 function handlePointerDown(e) {
@@ -231,57 +195,6 @@ function handleKeyDown(e) {
 
 const functionsKeys = computed(() => Object.keys(functions.value))
 
-// wires - group of wires which are ending in one point
-const wires = ref([])
-function updateWires(nodeId) {
-  const existingWireIndex = wires.value.findIndex((w) => w.id === nodeId)
-  const coords = nodesCoords.value[currentFunctionId.value].nodes[nodeId]
-  if (existingWireIndex !== -1) {
-    if (!functions.value[currentFunctionId.value].nodes[nodeId]) {
-      wires.value.splice(existingWireIndex, 1)
-      return
-    }
-    const wire = wires.value[existingWireIndex]
-    wire.starts = functions.value[currentFunctionId.value].nodes[nodeId].inputs?.map((i) =>
-      i
-        ? {
-            id: i,
-            x: nodesCoords.value[currentFunctionId.value].nodes[i]?.x ?? 0,
-            y: nodesCoords.value[currentFunctionId.value].nodes[i]?.y ?? 0,
-            width: nodesCoords.value[currentFunctionId.value].nodes[i]?.width ?? 100,
-          }
-        : null,
-    )
-    wire.end.x = coords?.x ?? 0
-    wire.end.y = coords?.y ?? 0
-  } else {
-    wires.value.push({
-      id: nodeId,
-      starts: functions.value[currentFunctionId.value].nodes[nodeId].inputs?.map((i) =>
-        i
-          ? {
-              id: i,
-              x: nodesCoords.value[currentFunctionId.value].nodes[i]?.x ?? 0,
-              y: nodesCoords.value[currentFunctionId.value].nodes[i]?.y ?? 0,
-              width: nodesCoords.value[currentFunctionId.value].nodes[i]?.width ?? 100,
-            }
-          : null,
-      ),
-      end: {
-        id: nodeId,
-        x: coords?.x ?? 0,
-        y: coords?.y ?? 0,
-      },
-    })
-  }
-}
-
-const updateAllWires = () => {
-  Object.keys(functions.value[currentFunctionId.value].nodes).forEach((n) => {
-    updateWires(n)
-  })
-}
-
 watch(
   currentFunctionId,
   () => {
@@ -300,7 +213,7 @@ watch(
         nodesWithoutCoords++
       }
     })
-    updateAllWires()
+    shaderGraphStore.updateAllWires()
   },
   {
     immediate: true,
@@ -308,122 +221,33 @@ watch(
 )
 
 const handleNewNodeChange = (nodeTypeName) => {
-  const nodeType = NodeTypesMap.get(nodeTypeName)
-  if (nodeType) {
-    const name = nodeType + getRandInt(100000, 999999).toString()
-    const defaultOptions = {}
-    nodeType.options?.forEach((o, index) => {
-      defaultOptions[o] = nodeType.defaultOptions[index]
-    })
-    functions.value[currentFunctionId.value].nodes[name] = {
-      type: nodeTypeName,
-      dataType: nodeType.dataTypes?.[0]?.[0] ?? null,
-      id: name,
-      inputs: nodeType.inputs?.[0]?.map(() => null),
-      inputTypes: nodeType.inputs?.[0],
-      options: defaultOptions,
-    }
-    if (!nodesCoords.value[currentFunctionId.value]) {
-      nodesCoords.value[currentFunctionId.value] = {
-        x: 0,
-        y: 0,
-        nodes: {},
-      }
-    }
-    nodesCoords.value[currentFunctionId.value].nodes[name] = {
-      x: 0,
-      y: 0,
-    }
-  }
+  shaderGraphStore.addNode(nodeTypeName)
 }
 
 const throttledUpdateAllWires = useThrottleFn(() => {
-  updateAllWires()
+  shaderGraphStore.updateAllWires()
 }, 25)
 
 const handleUpdateNode = (nodeId, nodeConfig) => {
-  const node = functions.value[currentFunctionId.value].nodes[nodeId]
-  const options = node.options ?? {}
-  if (nodeConfig.options) {
-    Object.keys(nodeConfig.options).forEach((k) => {
-      options[k] = nodeConfig.options[k]
-    })
-    node.options = options
-  }
-  if (nodeConfig.dataType) {
-    node.dataType = nodeConfig.dataType
-    Object.keys(functions.value[currentFunctionId.value].nodes).forEach((k) => {
-      functions.value[currentFunctionId.value].nodes[k].inputs?.forEach((i, index) => {
-        if (nodeId === i) {
-          functions.value[currentFunctionId.value].nodes[k].inputs[index] = null
-          updateWires(k)
-        }
-      })
-    })
-  }
-  if (nodeConfig.inputTypes) {
-    node.inputTypes = nodeConfig.inputTypes
-  }
-  if (nodeConfig.inputs) {
-    node.inputs = nodeConfig.inputs
-  }
-  updateWires(nodeId)
+  shaderGraphStore.updateNode(nodeId, nodeConfig)
 }
 
-const selectedWire = ref(null)
 const handleWireClick = (wire) => {
   selectedWire.value = wire
 }
+
 const hanldeDeleteWireClick = () => {
-  const nodeKey = Object.keys(functions.value[currentFunctionId.value].nodes).find(
-    (k) => k === selectedWire.value?.end,
-  )
-  if (nodeKey) {
-    functions.value[currentFunctionId.value].nodes[nodeKey].inputs[selectedWire.value.index] = null
-    updateWires(selectedWire.value.end)
-    selectedWire.value = null
-  }
+  shaderGraphStore.deleteWire(selectedWire.value)
+  selectedWire.value = null
 }
 
-const selectedNode = ref(null)
 const handleNodeClick = (node) => {
   selectedNode.value = node
 }
 const hanldeDeleteNodeClick = () => {
-  const id = selectedNode.value.id
-  Object.keys(functions.value[currentFunctionId.value].nodes).forEach((k) => {
-    functions.value[currentFunctionId.value].nodes[k].inputs?.forEach((i, index) => {
-      if (id === i) {
-        functions.value[currentFunctionId.value].nodes[k].inputs[index] = null
-        updateWires(k)
-      }
-    })
-  })
-  delete functions.value[currentFunctionId.value].nodes[id]
-  delete nodesCoords.value[id]
-  updateWires(id)
+  shaderGraphStore.deleteNode(selectedNode.value)
   selectedNode.value = null
 }
-
-const result = ref('')
-watch(
-  functions,
-  () => {
-    const root = functions.value.main
-    if (root) {
-      console.log('GenerateGlslCode')
-      result.value = GenerateGlslCode(toValue(root), toValue(functions), {
-        precision: 'mediump',
-      })
-    } else {
-      result.value = null
-    }
-  },
-  {
-    deep: true,
-    immediate: true,
-  },
-)
 
 const handlePinClicked = ({ type, isInput, innerX, innerY, index, node }, { x, y }) => {
   if (!newWire.value) {
@@ -471,7 +295,7 @@ const handlePinClicked = ({ type, isInput, innerX, innerY, index, node }, { x, y
         inputs[index] = newWire.value.nodeId
       }
     }
-    updateWires(node.id)
+    shaderGraphStore.updateWires(node.id)
     newWire.value = null
   }
 }
@@ -504,7 +328,7 @@ watch([cursorX, cursorY], () => {
 
 const handleWidthUpdate = (node, width) => {
   nodesCoords.value[currentFunctionId.value].nodes[node.id].width = width
-  updateAllWires()
+  shaderGraphStore.updateAllWires()
 }
 </script>
 

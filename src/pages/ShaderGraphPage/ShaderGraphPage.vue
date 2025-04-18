@@ -1,5 +1,6 @@
 <script setup>
 import DraggableElementsTable from './DraggableElementsTable.vue'
+import { useShaderGraphStore } from './ShaderGraphStore'
 
 const tree = {
   function000002: {
@@ -254,14 +255,13 @@ const coords = {
     nodes: {},
   },
 }
+
+const shaderGraphStore = useShaderGraphStore()
+shaderGraphStore.init(tree, coords)
 </script>
 
 <template>
-  <DraggableElementsTable
-    :initial-functions="tree"
-    :initial-nodes-coords="coords"
-  >
-  </DraggableElementsTable>
+  <DraggableElementsTable> </DraggableElementsTable>
 </template>
 
 <style scoped></style>
