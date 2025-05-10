@@ -1,31 +1,5 @@
 <template>
-  <div style="display: grid; grid-template-columns: 1fr 1fr">
-    <pre style="max-height: 200px; min-height: 200px; overflow: scroll">{{ result?.result }}</pre>
-    <div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr">
-        <label>Name</label>
-        <input v-model="newFunction.name" />
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr">
-        <label>Output</label>
-        <input v-model="newFunction.output" />
-      </div>
-      <button @click="handleAddFunction">Create</button>
-    </div>
-  </div>
-  <input @change="(e) => handleNewNodeChange(e.target.value)" />
-  <button @click="hanldeDeleteNodeClick">delete node</button>
-  <button @click="hanldeDeleteWireClick">delete wire</button>
-  <select v-model="currentFunctionId">
-    <option
-      v-for="key in functionsKeys"
-      :key="key"
-      :value="key"
-    >
-      {{ functions[key].name }}
-    </option>
-  </select>
-  <div style="height: 500px">
+  <div style="height: calc(100vh - 144px)">
     <div
       class="table no-touch-action"
       ref="el"
@@ -79,12 +53,11 @@
       </div>
     </div>
   </div>
-  <pre>{{ functions }}</pre>
 </template>
 
 <script setup lang="ts">
 import { useThrottleFn } from '@vueuse/core'
-import { computed, onMounted, onUnmounted, provide, ref, toValue, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import DraggableElement from './DraggableElement.vue'
 import SVGWireGroup from './SVGWireGroup.vue'
 import { useShaderGraphStore } from './ShaderGraphStore'
@@ -100,12 +73,10 @@ const {
   functions,
   nodesCoords,
   currentFunctionId,
-  newFunction,
   newWire,
   wires,
   selectedWire,
   selectedNode,
-  result,
 } = storeToRefs(shaderGraphStore)
 
 const el = ref()
@@ -126,11 +97,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeyDown)
 })
-
-function handleAddFunction() {
-  shaderGraphStore.addFunction(newFunction.value)
-  shaderGraphStore.resetNewFunction()
-}
 
 function handlePointerDown(e) {
   if (!draggingNodeId.value) {
@@ -193,8 +159,6 @@ function handleKeyDown(e) {
   }
 }
 
-const functionsKeys = computed(() => Object.keys(functions.value))
-
 watch(
   currentFunctionId,
   () => {
@@ -220,10 +184,6 @@ watch(
   },
 )
 
-const handleNewNodeChange = (nodeTypeName) => {
-  shaderGraphStore.addNode(nodeTypeName)
-}
-
 const throttledUpdateAllWires = useThrottleFn(() => {
   shaderGraphStore.updateAllWires()
 }, 25)
@@ -236,17 +196,8 @@ const handleWireClick = (wire) => {
   selectedWire.value = wire
 }
 
-const hanldeDeleteWireClick = () => {
-  shaderGraphStore.deleteWire(selectedWire.value)
-  selectedWire.value = null
-}
-
 const handleNodeClick = (node) => {
   selectedNode.value = node
-}
-const hanldeDeleteNodeClick = () => {
-  shaderGraphStore.deleteNode(selectedNode.value)
-  selectedNode.value = null
 }
 
 const handlePinClicked = ({ type, isInput, innerX, innerY, index, node }, { x, y }) => {
