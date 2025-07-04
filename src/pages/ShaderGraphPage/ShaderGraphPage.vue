@@ -23,6 +23,9 @@ import {
 import { computed, ref } from 'vue'
 import { functions as funcs, coords } from './examples/test'
 import { provideShaderGraphController } from './useShaderGraphController'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const shaderGraph = provideShaderGraphController()
 shaderGraph.init(funcs, coords)
@@ -42,8 +45,10 @@ const handleDeleteNodeClick = () => {
 }
 
 function handleAddFunction() {
-  shaderGraph.addFunction(shaderGraph.newFunction.value)
+  const id = shaderGraph.addFunction(shaderGraph.newFunction.value)
+  showFunctionCreation.value = false
   shaderGraph.resetNewFunction()
+  shaderGraph.currentFunctionId.value = id
 }
 
 const handleNewNodeChange = (nodeTypeName) => {
@@ -51,6 +56,8 @@ const handleNewNodeChange = (nodeTypeName) => {
 }
 
 const functionsKeys = computed(() => Object.keys(shaderGraph.functions.value))
+
+const allowedTypes = ['float', 'vec2', 'vec3', 'vec4']
 </script>
 
 <template>
@@ -137,9 +144,27 @@ const functionsKeys = computed(() => Object.keys(shaderGraph.functions.value))
         <DialogHeader>
           <DialogTitle>Shader code</DialogTitle>
           <DialogDescription class="text-primary">
-            <pre class="whitespace-break-spaces max-h-[500px] overflow-y-auto text-start">{{
-              shaderGraph.result.value.result
-            }}</pre>
+            <Tabs default-value="code">
+              <TabsList>
+                <TabsTrigger value="code"> Code </TabsTrigger>
+                <TabsTrigger value="graph-data"> Graph data </TabsTrigger>
+              </TabsList>
+              <TabsContent value="code">
+                <pre
+                  class="whitespace-break-spaces h-[500px] max-h-[500px] overflow-y-auto text-start"
+                >
+                {{ shaderGraph.result.value.result }}
+                </pre>
+              </TabsContent>
+              <TabsContent value="graph-data">
+                <pre
+                  class="whitespace-break-spaces h-[500px] max-h-[500px] overflow-y-auto text-start"
+                >
+                {{ shaderGraph.functions.value }}
+              </pre
+                >
+              </TabsContent>
+            </Tabs>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
@@ -150,20 +175,50 @@ const functionsKeys = computed(() => Object.keys(shaderGraph.functions.value))
         <DialogHeader>
           <DialogTitle>Create function</DialogTitle>
         </DialogHeader>
-        <div>
-          <div>
+        <div class="flex-col">
+          <div class="flex-col gap-2 mb-2">
             <div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr">
-                <label>Name</label>
-                <input v-model="shaderGraph.newFunction.value.name" />
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr">
-                <label>Output</label>
-                <input v-model="shaderGraph.newFunction.value.output" />
-              </div>
-              <button @click="handleAddFunction">Create</button>
+              <Label for="function-name">Name</Label>
+              <Input
+                id="function-name"
+                type="text"
+                placeholder="Name"
+                :model-value="shaderGraph.newFunction.value?.name"
+                @update:model-value="(p) => (shaderGraph.newFunction.value.name = p)"
+              />
+            </div>
+            <div>
+              <Label for="function-Output">Output</Label>
+              <!-- <Input
+                id="function-Output"
+                type="text"
+                placeholder="Name"
+                :model-value="shaderGraph.newFunction.value?.output"
+                @update:model-value="(p) => (shaderGraph.newFunction.value.output = p)"
+              /> -->
+
+              <Select
+                :model-value="shaderGraph.newFunction.value?.output"
+                @update:model-value="(v) => (shaderGraph.newFunction.value.output = v)"
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Output" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      v-for="type in allowedTypes"
+                      :key="type"
+                      :value="type"
+                    >
+                      {{ type }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
+          <Button @click="handleAddFunction">Create</Button>
         </div>
       </DialogContent>
     </Dialog>

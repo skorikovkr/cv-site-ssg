@@ -51,14 +51,19 @@ export function useShaderGraphController() {
     while (Object.keys(functions.value).find((k) => k === id)) {
       id = `function${getRandInt(0, 999999)}`
     }
+    const funcDefinition = toValue(func)
     newFunction.value.id = id
     functions.value[id] = {
-      ...func.value,
+      ...funcDefinition,
       nodes: {},
     }
     nodesCoords.value[id] = {
       nodes: {},
     }
+    addNode('function-return', id, {
+      inputs: [[funcDefinition.output]],
+    })
+    return id
   }
 
   function resetNewFunction() {
@@ -120,30 +125,37 @@ export function useShaderGraphController() {
     })
   }
 
-  function addNode(nodeTypeName) {
+  function addNode(
+    nodeTypeName,
+    functionId = null,
+    defaults = {
+      dataType: null,
+      inputs: null,
+    },
+  ) {
     const nodeType = NodeTypesMap.get(nodeTypeName)
     if (nodeType) {
-      const name = nodeType + getRandInt(100000, 999999).toString()
+      const name = nodeTypeName + getRandInt(100000, 999999).toString()
       const defaultOptions = {}
       nodeType.options?.forEach((o, index) => {
         defaultOptions[o] = nodeType.defaultOptions[index]
       })
-      functions.value[currentFunctionId.value].nodes[name] = {
+      functions.value[functionId ?? currentFunctionId.value].nodes[name] = {
         type: nodeTypeName,
-        dataType: nodeType.dataTypes?.[0]?.[0] ?? null,
+        dataType: defaults.dataType ?? nodeType.dataTypes?.[0]?.[0] ?? null,
         id: name,
-        inputs: nodeType.inputs?.[0]?.map(() => null),
-        inputTypes: nodeType.inputs?.[0],
+        inputs: (defaults.inputs ?? nodeType.inputs)?.[0]?.map(() => null),
+        inputTypes: (defaults.inputs ?? nodeType.input0)?.[0],
         options: defaultOptions,
       }
-      if (!nodesCoords.value[currentFunctionId.value]) {
-        nodesCoords.value[currentFunctionId.value] = {
+      if (!nodesCoords.value[functionId ?? currentFunctionId.value]) {
+        nodesCoords.value[functionId ?? currentFunctionId.value] = {
           x: 0,
           y: 0,
           nodes: {},
         }
       }
-      nodesCoords.value[currentFunctionId.value].nodes[name] = {
+      nodesCoords.value[functionId ?? currentFunctionId.value].nodes[name] = {
         x: 0,
         y: 0,
       }
