@@ -152,16 +152,13 @@ const allowedTypes = ['float', 'vec2', 'vec3', 'vec4']
               <TabsContent value="code">
                 <pre
                   class="whitespace-break-spaces h-[500px] max-h-[500px] overflow-y-auto text-start"
+                  >{{ shaderGraph.result.value.result }}</pre
                 >
-                {{ shaderGraph.result.value.result }}
-                </pre>
               </TabsContent>
               <TabsContent value="graph-data">
                 <pre
                   class="whitespace-break-spaces h-[500px] max-h-[500px] overflow-y-auto text-start"
-                >
-                {{ shaderGraph.functions.value }}
-              </pre
+                  >{{ shaderGraph.functions.value }}</pre
                 >
               </TabsContent>
             </Tabs>
