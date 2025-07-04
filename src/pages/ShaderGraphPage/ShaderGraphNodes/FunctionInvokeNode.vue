@@ -15,14 +15,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useShaderGraphStore } from '../ShaderGraphStore'
-import { storeToRefs } from 'pinia'
+import { injectShaderGraphController } from '../useShaderGraphController'
 
-const shaderGraphStore = useShaderGraphStore()
+const shaderGraphStore = injectShaderGraphController()
 
-const { functions } = storeToRefs(shaderGraphStore)
+const { functions } = shaderGraphStore
 
 const customFunctions = computed(() =>
   (Object.keys(functions.value).filter((f) => f !== 'main') ?? []).map((k) => functions.value[k]),

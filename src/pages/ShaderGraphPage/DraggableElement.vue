@@ -89,18 +89,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { ShaderGraphNodes } from './ShaderGraphNodes/ShaderGraphNodes'
 import { vPreventPointerMovement } from './utils/PreventPointerDirectiveMove'
-import { useShaderGraphStore } from './ShaderGraphStore'
-import { storeToRefs } from 'pinia'
+import { injectShaderGraphController } from './useShaderGraphController'
 
 const el = ref(null)
 
-const shaderGraphStore = useShaderGraphStore()
+const shaderGraphStore = injectShaderGraphController()
 
-const { originPoint } = storeToRefs(shaderGraphStore)
+const { originPoint } = shaderGraphStore
 
 const props = defineProps(['node', 'nodeCoord', 'isDragging'])
 

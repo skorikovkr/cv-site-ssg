@@ -1,8 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import Separator from '@/components/ui/separator/Separator.vue'
 import DraggableElementsTable from './DraggableElementsTable.vue'
 import ShaderGraphMenubar from './ShaderGraphMenubar.vue'
-import { useShaderGraphStore } from './ShaderGraphStore'
 import { Button } from '@/components/ui/button'
 import { Blocks, FunctionSquare, Plus, Spline, Terminal, X } from 'lucide-vue-next'
 import {
@@ -22,47 +21,45 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { computed, ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { functions as funcs, coords } from './examples/test'
+import { provideShaderGraphController } from './useShaderGraphController'
 
-const shaderGraphStore = useShaderGraphStore()
-shaderGraphStore.init(funcs, coords)
+const shaderGraph = provideShaderGraphController()
+shaderGraph.init(funcs, coords)
 
 const showCode = ref(false)
 const showFunctionCreation = ref(false)
 const showNodeCreation = ref(false)
 
 const handleDeleteWireClick = () => {
-  shaderGraphStore.deleteWire(shaderGraphStore.selectedWire)
-  shaderGraphStore.selectedWire = null
+  shaderGraph.deleteWire(shaderGraph.selectedWire.value)
+  shaderGraph.selectedWire.value = null
 }
 
 const handleDeleteNodeClick = () => {
-  shaderGraphStore.deleteNode(shaderGraphStore.selectedNode)
-  shaderGraphStore.selectedNode = null
+  shaderGraph.deleteNode(shaderGraph.selectedNode)
+  shaderGraph.selectedNode.value = null
 }
 
 function handleAddFunction() {
-  shaderGraphStore.addFunction(newFunction.value)
-  shaderGraphStore.resetNewFunction()
+  shaderGraph.addFunction(shaderGraph.newFunction.value)
+  shaderGraph.resetNewFunction()
 }
 
 const handleNewNodeChange = (nodeTypeName) => {
-  shaderGraphStore.addNode(nodeTypeName)
+  shaderGraph.addNode(nodeTypeName)
 }
 
-const { currentFunctionId, functions, newFunction } = storeToRefs(shaderGraphStore)
-
-const functionsKeys = computed(() => Object.keys(functions.value))
+const functionsKeys = computed(() => Object.keys(shaderGraph.functions.value))
 </script>
 
 <template>
   <div class="shader-graph__work-view">
     <ShaderGraphMenubar />
     <div class="p-1 flex gap-1 items-center">
-      <Select v-model:model-value="currentFunctionId">
+      <Select v-model:model-value="shaderGraph.currentFunctionId.value">
         <SelectTrigger class="w-[180px]">
-          <SelectValue placeholder="Select a fruit" />
+          <SelectValue placeholder="Select function" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -72,7 +69,7 @@ const functionsKeys = computed(() => Object.keys(functions.value))
               :key="key"
               :value="key"
             >
-              {{ functions[key]?.name ?? key }}
+              {{ shaderGraph.functions.value[key]?.name ?? key }}
             </SelectItem>
           </SelectGroup>
         </SelectContent>
@@ -100,7 +97,7 @@ const functionsKeys = computed(() => Object.keys(functions.value))
       <Button
         variant="ghost"
         class="relative"
-        :disabled="!shaderGraphStore.selectedNode"
+        :disabled="!shaderGraph.selectedNode.value"
         @click="handleDeleteNodeClick"
       >
         <Blocks />
@@ -112,7 +109,7 @@ const functionsKeys = computed(() => Object.keys(functions.value))
       <Button
         variant="ghost"
         class="relative"
-        :disabled="!shaderGraphStore.selectedWire"
+        :disabled="!shaderGraph.selectedWire.value"
         @click="handleDeleteWireClick"
       >
         <Spline />
@@ -141,7 +138,7 @@ const functionsKeys = computed(() => Object.keys(functions.value))
           <DialogTitle>Shader code</DialogTitle>
           <DialogDescription class="text-primary">
             <pre class="whitespace-break-spaces max-h-[500px] overflow-y-auto text-start">{{
-              shaderGraphStore.result.result
+              shaderGraph.result.value.result
             }}</pre>
           </DialogDescription>
         </DialogHeader>
@@ -158,11 +155,11 @@ const functionsKeys = computed(() => Object.keys(functions.value))
             <div>
               <div style="display: grid; grid-template-columns: 1fr 1fr">
                 <label>Name</label>
-                <input v-model="newFunction.name" />
+                <input v-model="shaderGraph.newFunction.value.name" />
               </div>
               <div style="display: grid; grid-template-columns: 1fr 1fr">
                 <label>Output</label>
-                <input v-model="newFunction.output" />
+                <input v-model="shaderGraph.newFunction.value.output" />
               </div>
               <button @click="handleAddFunction">Create</button>
             </div>

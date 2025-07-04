@@ -57,13 +57,12 @@
 
 <script setup lang="ts">
 import { useThrottleFn } from '@vueuse/core'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import DraggableElement from './DraggableElement.vue'
 import SVGWireGroup from './SVGWireGroup.vue'
-import { useShaderGraphStore } from './ShaderGraphStore'
-import { storeToRefs } from 'pinia'
+import { injectShaderGraphController } from './useShaderGraphController'
 
-const shaderGraphStore = useShaderGraphStore()
+const shaderGraphStore = injectShaderGraphController()
 
 const {
   originPoint,
@@ -77,7 +76,7 @@ const {
   wires,
   selectedWire,
   selectedNode,
-} = storeToRefs(shaderGraphStore)
+} = shaderGraphStore
 
 const el = ref()
 const startOriginX = ref(0)

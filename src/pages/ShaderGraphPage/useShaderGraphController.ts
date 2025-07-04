@@ -1,10 +1,9 @@
-import { defineStore } from 'pinia'
-import { computed, ref, toValue } from 'vue'
+import { computed, inject, provide, ref, toValue, type InjectionKey } from 'vue'
 import { getRandInt } from './utils/GetRandInt'
 import { NodeTypesMap } from './utils/NodeTypesMap'
 import { GenerateGlslCode } from './utils/GenerateGlslCode'
 
-export const useShaderGraphStore = defineStore('shaderGraphStore', () => {
+export function useShaderGraphController() {
   const originPoint = ref({
     x: 0,
     y: 0,
@@ -247,4 +246,22 @@ export const useShaderGraphStore = defineStore('shaderGraphStore', () => {
     deleteNode,
     deleteWire,
   }
-})
+}
+
+export const ShaderGraphControllerSymbol = Symbol() as InjectionKey<
+  ReturnType<typeof useShaderGraphController>
+>
+
+export function provideShaderGraphController(key?: string | typeof ShaderGraphControllerSymbol) {
+  const controller = useShaderGraphController()
+  provide(key ?? ShaderGraphControllerSymbol, controller)
+  return controller
+}
+
+export function injectShaderGraphController(key?: string | typeof ShaderGraphControllerSymbol) {
+  const controller = inject(key ?? ShaderGraphControllerSymbol)
+  if (!controller) {
+    throw new Error('ShaderGraphController was not provided.')
+  }
+  return controller
+}
