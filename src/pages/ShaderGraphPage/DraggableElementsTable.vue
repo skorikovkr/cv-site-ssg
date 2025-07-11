@@ -288,7 +288,7 @@ const handleWidthUpdate = (node, width) => {
 }
 
 .table {
-  background-color: gray;
+  background-color: rgb(48, 48, 48);
   width: 100%;
   height: 100%;
   overflow: hidden;

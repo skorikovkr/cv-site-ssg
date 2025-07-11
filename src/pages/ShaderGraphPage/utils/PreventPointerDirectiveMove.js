@@ -7,8 +7,8 @@ export const vPreventPointerMovement = {
     el.addEventListener('pointerdown', stopPropagation)
   },
   unmounted: (el) => {
-    el.addEventListener('pointermove', stopPropagation)
-    el.addEventListener('pointerup', stopPropagation)
-    el.addEventListener('pointerdown', stopPropagation)
+    el.removeEventListener('pointermove', stopPropagation)
+    el.removeEventListener('pointerup', stopPropagation)
+    el.removeEventListener('pointerdown', stopPropagation)
   },
 }

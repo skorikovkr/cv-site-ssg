@@ -4,7 +4,7 @@
       v-for="wire in wires"
       :key="wire.id"
       :d="wire.path"
-      stroke="black"
+      stroke="gray"
       fill="transparent"
       stroke-width="3"
       class="bold-on-hover"

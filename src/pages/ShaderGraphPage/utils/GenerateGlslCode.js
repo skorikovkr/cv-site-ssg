@@ -38,11 +38,13 @@ function GenerateFunctionCode(f) {
       requiredFunctions.push(node.options.id)
     }
     const nodeType = NodeTypesMap.get(node.type)
-    if (alreadyDefinedVars.has(node.id)) {
-      return node.id
+    if (alreadyDefinedVars.has(node.variableName ?? node.id)) {
+      return node.variableName ?? node.id
     }
     const isExpression =
-      node.type === 'value' || (nodeType.preferExpression && numberOfNodeUsages.get(node.id) < 2)
+      !node.variableName &&
+      (node.type === 'value' ||
+        (nodeType.preferExpression && numberOfNodeUsages.get(node.variableName ?? node.id) < 2))
     const part = nodeType.stringify(
       node,
       node.inputTypes?.map((_, i) =>
@@ -52,12 +54,12 @@ function GenerateFunctionCode(f) {
     if (isExpression) {
       return part
     } else {
-      alreadyDefinedVars.add(node.id)
+      alreadyDefinedVars.add(node.variableName ?? node.id)
       // why r2?
       // += operator can overlap with other recursions
       //('result = result + r2', 'result' remains the same as in first recursion depth and erases future concatenations)
       let dataType = ''
-      let nodeId = node.id
+      let nodeId = node.variableName ?? node.id
       let r2 = ''
       if (node.type !== 'function-return') {
         dataType = node.dataType
@@ -74,6 +76,12 @@ function GenerateFunctionCode(f) {
         }
       } else {
         r2 = `${dataType}${nodeId}=` + part + ';\n'
+        if (node.type !== 'function-return' && node.variableName) {
+          let code = node.customCode
+          if (code[code.length - 1] === '\n') code = code.substring(0, code.length)
+          if (code[code.length - 1] !== ';') code += ';'
+          r2 += code + '\n'
+        }
       }
       result += '\t' + r2
       return nodeId

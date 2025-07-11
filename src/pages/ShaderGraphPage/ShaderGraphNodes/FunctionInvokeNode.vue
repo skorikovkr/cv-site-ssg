@@ -1,23 +1,18 @@
 <template>
-  <div>
-    <select
-      v-model="func"
-      style="width: 60px"
+  <div class="min-w-[165px]">
+    <NodeSelect
+      v-model:model-value="func"
+      :options="options"
     >
-      <option
-        v-for="t in customFunctions"
-        :key="t.id"
-        :value="t"
-      >
-        {{ t.name }}
-      </option>
-    </select>
+      <template #label>Functions</template>
+    </NodeSelect>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { injectShaderGraphController } from '../useShaderGraphController'
+import NodeSelect from './UI/NodeSelect.vue'
 
 const shaderGraphStore = injectShaderGraphController()
 
@@ -32,6 +27,14 @@ const props = defineProps(['node'])
 const func = ref(customFunctions.value.find((f) => f.id === props.node?.options?.id))
 
 const emits = defineEmits(['updateNode'])
+
+const options = computed(() =>
+  customFunctions.value.map((v) => ({
+    key: v.id,
+    label: v.name,
+    value: v,
+  })),
+)
 
 watch(func, () => {
   if (func.value?.id) {

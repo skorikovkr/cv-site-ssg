@@ -40,7 +40,7 @@ const handleDeleteWireClick = () => {
 }
 
 const handleDeleteNodeClick = () => {
-  shaderGraph.deleteNode(shaderGraph.selectedNode)
+  shaderGraph.deleteNode(shaderGraph.selectedNode.value)
   shaderGraph.selectedNode.value = null
 }
 
@@ -186,14 +186,6 @@ const allowedTypes = ['float', 'vec2', 'vec3', 'vec4']
             </div>
             <div>
               <Label for="function-Output">Output</Label>
-              <!-- <Input
-                id="function-Output"
-                type="text"
-                placeholder="Name"
-                :model-value="shaderGraph.newFunction.value?.output"
-                @update:model-value="(p) => (shaderGraph.newFunction.value.output = p)"
-              /> -->
-
               <Select
                 :model-value="shaderGraph.newFunction.value?.output"
                 @update:model-value="(v) => (shaderGraph.newFunction.value.output = v)"

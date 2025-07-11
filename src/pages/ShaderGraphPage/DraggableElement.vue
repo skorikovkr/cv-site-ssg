@@ -1,21 +1,65 @@
 <template>
   <div
     ref="el"
-    class="draggable prevent-select"
+    class="draggable prevent-select rounded-xl border bg-card text-card-foreground shadow"
     :style="{
       top: transformedY + 'px',
       left: transformedX + 'px',
       userSelect: isDragging ? 'none' : 'auto',
       zIndex: isDragging ? 4 : 3,
     }"
-    style="position: absolute; background-color: burlywood; min-height: 100px; min-width: 100px"
+    :class="[selectedNode?.value?.id === node.id ? 'draggable--outline' : null]"
+    style="position: absolute; min-height: 100px; min-width: 100px"
     @click="() => emits('click', node)"
   >
     <div
-      class="draggable__header"
+      class="draggable__header rounded-t-sm border-b flex justify-between items-center"
       @pointerdown.stop="handlePointerDown"
     >
-      {{ node.type }}
+      <div>
+        {{ node.type }}
+      </div>
+      <Popover modal>
+        <PopoverTrigger as-child>
+          <Settings
+            class="cursor-pointer"
+            :size="14"
+          ></Settings>
+        </PopoverTrigger>
+        <PopoverContent class="w-50 p-2">
+          <div class="flex items-center space-x-2 pb-2">
+            <Checkbox
+              v-model="isStatement"
+              :id="`is-statement-${node.id}`"
+            ></Checkbox>
+            <label
+              :for="`is-statement-${node.id}`"
+              class="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Node has own variable name
+            </label>
+          </div>
+          <Label
+            class="text-xs"
+            :class="[!isStatement && 'opacity-50']"
+            >Variable name</Label
+          >
+          <NodeInput
+            v-model="variableName"
+            :disabled="!isStatement"
+          ></NodeInput>
+
+          <Label
+            class="text-xs"
+            :class="[!isStatement && 'opacity-50']"
+            >Custom code after statement</Label
+          >
+          <Textarea
+            v-model="node.customCode"
+            :disabled="!isStatement"
+          />
+        </PopoverContent>
+      </Popover>
     </div>
     <div
       v-if="node.inputs"
@@ -28,13 +72,7 @@
           top: p.y + 'px',
           left: p.x + 'px',
         }"
-        style="
-          position: absolute;
-          border-radius: 50%;
-          width: 10px;
-          height: 10px;
-          background-color: blue;
-        "
+        class="input-point"
         @click="
           () =>
             handlePinClick(p, {
@@ -44,7 +82,9 @@
         "
         v-prevent-pointer-movement
       >
-        <div style="position: absolute; left: 10px; top: -4px">
+        <div
+          style="position: absolute; left: 11px; top: -2px; font-size: 10px; font-weight: bolder"
+        >
           {{ p.type }}
         </div>
       </div>
@@ -74,12 +114,15 @@
         "
         v-prevent-pointer-movement
       >
-        <div style="position: absolute; right: 10px; top: -4px; text-align: right">
+        <div class="output-point">
           {{ outputPoint.type }}
         </div>
       </div>
     </div>
-    <div style="padding-top: 5px; padding-bottom: 10px">
+    <div
+      class="p-2"
+      v-prevent-pointer-movement
+    >
       <component
         :is="ShaderGraphNodes[node.type]"
         :node="node"
@@ -94,12 +137,18 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { ShaderGraphNodes } from './ShaderGraphNodes/ShaderGraphNodes'
 import { vPreventPointerMovement } from './utils/PreventPointerDirectiveMove'
 import { injectShaderGraphController } from './useShaderGraphController'
+import { Settings } from 'lucide-vue-next'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Textarea } from '@/components/ui/textarea'
 
 const el = ref(null)
 
 const shaderGraphStore = injectShaderGraphController()
 
-const { originPoint } = shaderGraphStore
+const { originPoint, selectedNode } = shaderGraphStore
 
 const props = defineProps(['node', 'nodeCoord', 'isDragging'])
 
@@ -120,6 +169,37 @@ const transformedY = computed(() => originPoint.value.y + y.value)
 
 onMounted(() => {
   width.value = el.value?.getBoundingClientRect().width ?? 100
+})
+
+const variableName = ref(props.node.variableName)
+const isStatement = ref(!!props.node.variableName) // node must be statement to have own variable name
+const customCode = ref(props.node.customCode)
+
+watch(isStatement, (val) => {
+  if (!val) {
+    emits('updateNode', props.node.id, {
+      variableName: undefined,
+    })
+    variableName.value = undefined
+  } else if (!props.node.variableName) {
+    variableName.value = props.node.id
+  }
+})
+
+watch(variableName, (v) => {
+  if (v !== undefined) {
+    emits('updateNode', props.node.id, {
+      variableName: v,
+    })
+  }
+})
+
+watch(customCode, (v) => {
+  if (v !== undefined) {
+    emits('updateNode', props.node.id, {
+      customCode: v,
+    })
+  }
 })
 
 watch(
@@ -196,8 +276,33 @@ function handlePointerDown(e) {
   z-index: 1;
 }
 
+.draggable--outline {
+  outline: 2px solid blue;
+}
+
 .draggable__header {
   cursor: move;
   z-index: 2;
+  font-weight: bolder;
+  padding-left: 6px;
+  padding-right: 6px;
+  font-size: 12px;
+}
+
+.output-point {
+  position: absolute;
+  right: 11px;
+  top: -2px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: bolder;
+}
+
+.input-point {
+  position: absolute;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: blue;
 }
 </style>
