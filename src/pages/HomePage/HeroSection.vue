@@ -72,7 +72,7 @@ onMounted(() => {
               C#
             </div>
             <pre
-              class="font-mono text-slate-200 font-bold text-lg xl:text-base p-4 text-wrap overflow-hidden min-h-[172px] xl:max-h-[160px] xl:min-h-[160px]">{{ code1 }}<span
+              class="font-mono text-slate-200 font-bold text-sm md:text-base p-4 text-wrap overflow-hidden min-h-[150px] xl:max-h-[160px] xl:min-h-[160px]">{{ code1 }}<span
 :style="{ display: carriage2Visibility }"
                             class="h-12 ml-1 border-r-2 border-white"
           /></pre>
@@ -84,7 +84,7 @@ onMounted(() => {
               CSS
             </div>
             <pre
-              class="font-mono text-slate-200 font-bold text-lg xl:text-base p-4 text-wrap overflow-hidden min-h-[256px] xl:max-h-[210px] xl:min-h-[210px]">{{ code2 }}<span
+              class="font-mono text-slate-200 font-bold text-sm md:text-base p-4 text-wrap overflow-hidden min-h-[206px] xl:max-h-[210px] xl:min-h-[210px]">{{ code2 }}<span
 :style="{ display: carriage3Visibility }"
                             class="h-12 ml-1 border-r-2 border-white"
           /></pre>

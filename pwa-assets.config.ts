@@ -30,8 +30,8 @@ export const preset = {
       compressionLevel: 9,
       quality: 60,
     },
-    name: (landscape, size, dark) => {
-      return `apple-splash-${landscape ? 'landscape' : 'portrait'}-${typeof dark === 'boolean' ? (dark ? 'dark-' : 'light-') : ''}${size.width}x${size.height}.png`
+    name: (landscape, size) => {
+      return `apple-splash-${landscape ? 'landscape' : 'portrait'}-${size.width}x${size.height}.png`
     },
   }),
 }
