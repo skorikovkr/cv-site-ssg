@@ -1,12 +1,19 @@
 import {
   defineConfig,
   minimal2023Preset,
-  createAppleSplashScreens,
+  combinePresetAndAppleSplashScreens,
 } from '@vite-pwa/assets-generator/config'
+import { readFile } from 'node:fs/promises'
 
-export const preset = {
-  ...minimal2023Preset,
-  appleSplashScreens: createAppleSplashScreens({
+export default defineConfig({
+  headLinkOptions: {
+    preset: '2023',
+  },
+  preset: combinePresetAndAppleSplashScreens(minimal2023Preset, {
+    async darkImageResolver(imageName) {
+      return imageName === 'public/logo.svg' ? await readFile('public/logo-dark.svg') : undefined
+    },
+    darkResizeOptions: { background: 'black', fit: 'contain' },
     padding: 0.3,
     resizeOptions: { background: 'white', fit: 'contain' },
     // by default, dark splash screens are exluded
@@ -30,16 +37,9 @@ export const preset = {
       compressionLevel: 9,
       quality: 60,
     },
-    name: (landscape, size) => {
-      return `apple-splash-${landscape ? 'landscape' : 'portrait'}-${size.width}x${size.height}.png`
+    name: (landscape, size, dark) => {
+      return `apple-splash-${landscape ? 'landscape' : 'portrait'}-${typeof dark === 'boolean' ? (dark ? 'dark-' : 'light-') : ''}${size.width}x${size.height}.png`
     },
   }),
-}
-
-export default defineConfig({
-  headLinkOptions: {
-    preset: '2023',
-  },
-  preset,
   images: ['public/logo.svg'],
 })
