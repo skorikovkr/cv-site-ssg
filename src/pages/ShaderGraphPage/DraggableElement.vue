@@ -19,47 +19,64 @@
       <div>
         {{ node.type }}
       </div>
-      <Popover modal>
-        <PopoverTrigger as-child>
-          <Settings
-            class="cursor-pointer"
-            :size="14"
-          ></Settings>
-        </PopoverTrigger>
-        <PopoverContent class="w-50 p-2">
-          <div class="flex items-center space-x-2 pb-2">
-            <Checkbox
-              v-model="isStatement"
-              :id="`is-statement-${node.id}`"
-            ></Checkbox>
-            <label
-              :for="`is-statement-${node.id}`"
-              class="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Node has own variable name
-            </label>
-          </div>
-          <Label
-            class="text-xs"
-            :class="[!isStatement && 'opacity-50']"
-            >Variable name</Label
-          >
-          <NodeInput
-            v-model="variableName"
-            :disabled="!isStatement"
-          ></NodeInput>
 
-          <Label
-            class="text-xs"
-            :class="[!isStatement && 'opacity-50']"
-            >Custom code after statement</Label
-          >
-          <Textarea
-            v-model="node.customCode"
-            :disabled="!isStatement"
-          />
-        </PopoverContent>
-      </Popover>
+      <div class="flex gap-1">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <CodeSquare
+                :size="14"
+                color="gray"
+              ></CodeSquare>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>This node contains custom code</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <Popover modal>
+          <PopoverTrigger as-child>
+            <Settings
+              class="cursor-pointer"
+              :size="14"
+            ></Settings>
+          </PopoverTrigger>
+          <PopoverContent class="w-50 p-2">
+            <div class="flex items-center space-x-2 pb-2">
+              <Checkbox
+                v-model="isStatement"
+                :id="`is-statement-${node.id}`"
+              ></Checkbox>
+              <label
+                :for="`is-statement-${node.id}`"
+                class="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Node has own variable name
+              </label>
+            </div>
+            <Label
+              class="text-xs"
+              :class="[!isStatement && 'opacity-50']"
+              >Variable name</Label
+            >
+            <NodeInput
+              v-model="variableName"
+              :disabled="!isStatement"
+            ></NodeInput>
+
+            <Label
+              class="text-xs"
+              :class="[!isStatement && 'opacity-50']"
+              >Custom code after statement</Label
+            >
+            <Textarea
+              v-model="node.customCode"
+              :disabled="!isStatement"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
     <div
       v-if="node.inputs"
@@ -137,12 +154,13 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { ShaderGraphNodes } from './ShaderGraphNodes/ShaderGraphNodes'
 import { vPreventPointerMovement } from './utils/PreventPointerDirectiveMove'
 import { injectShaderGraphController } from './useShaderGraphController'
-import { Settings } from 'lucide-vue-next'
+import { CodeSquare, Settings } from 'lucide-vue-next'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 const el = ref(null)
 

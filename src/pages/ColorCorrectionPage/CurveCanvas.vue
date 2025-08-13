@@ -153,10 +153,10 @@ const handleMouseLeave = () => {
       height: colorCorrectionStore.curveCanvasSize + 'px',
       width: colorCorrectionStore.curveCanvasSize + 'px',
     }"
-    @mouseup="handleStopDragging"
-    @mousemove="handleChangeCoords"
-    @mousedown="handleNotPointMouseDown"
-    @mouseleave="handleMouseLeave"
+    @pointerup="handleStopDragging"
+    @pointermove="handleChangeCoords"
+    @pointerdown="handleNotPointMouseDown"
+    @pointerleave="handleMouseLeave"
   >
     <svg class="curve-canvas">
       <!-- Grid -->
@@ -269,6 +269,7 @@ const handleMouseLeave = () => {
 <style scoped>
 .curve-canvas-container {
   background-color: #333333;
+  touch-action: none;
 }
 
 .curve-canvas {

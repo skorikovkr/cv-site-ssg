@@ -23,7 +23,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
       },
-      includeAssets: '**/*',
+      includeAssets: ['images/**/*', 'sounds/**/*', 'apple-splash-portrait-dark-1170x2532.png'],
       manifest: {
         name: 'skorikovkr',
         short_name: 'skorikovkr',
