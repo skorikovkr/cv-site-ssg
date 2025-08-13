@@ -23,9 +23,9 @@ export default defineConfig({
       workbox: {
         globPatterns: [
           '**/*.{js,css,html,svg}',
-          'public/images/**/*',
-          'public/sounds/**/*',
-          'public/apple-splash-portrait-dark-1170x2532.png',
+          'images/**/*',
+          'sounds/**/*',
+          'apple-splash-portrait-dark-1170x2532.png',
         ],
       },
       manifest: {
