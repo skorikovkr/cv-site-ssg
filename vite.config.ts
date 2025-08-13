@@ -21,9 +21,13 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: 'inline',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg}'],
+        globPatterns: [
+          '**/*.{js,css,html,svg}',
+          'public/images/**/*',
+          'public/sounds/**/*',
+          'public/apple-splash-portrait-dark-1170x2532.png',
+        ],
       },
-      includeAssets: ['images/**/*', 'sounds/**/*', 'apple-splash-portrait-dark-1170x2532.png'],
       manifest: {
         name: 'skorikovkr',
         short_name: 'skorikovkr',
