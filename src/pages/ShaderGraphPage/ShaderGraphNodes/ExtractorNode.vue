@@ -1,9 +1,9 @@
 <template>
-  <div class="min-w-[125px] pl-6 mt-0">
+  <div class="min-w-[125px]">
     <Label class="text-xs">Extraction prop</Label>
     <NodeInput
       v-model.lazy="value"
-      style="width: 85px"
+      style="width: 90px"
       v-prevent-pointer-movement
     ></NodeInput>
   </div>

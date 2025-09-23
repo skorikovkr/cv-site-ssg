@@ -150,7 +150,7 @@ export function useShaderGraphController() {
         dataType: defaults.dataType ?? nodeType.dataTypes?.[0]?.[0] ?? null,
         id: name,
         inputs: (defaults.inputs ?? nodeType.inputs)?.[0]?.map(() => null),
-        inputTypes: (defaults.inputs ?? nodeType.input0)?.[0],
+        inputTypes: (defaults.inputs ?? nodeType.inputs)?.[0],
         options: defaultOptions,
       }
       if (!nodesCoords.value[functionId ?? currentFunctionId.value]) {

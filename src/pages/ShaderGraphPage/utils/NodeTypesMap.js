@@ -162,8 +162,8 @@ NodeTypesMap.set('clamp', {
 })
 
 NodeTypesMap.set('abs', {
-  inputs: [['float'], ['vec3']],
-  dataTypes: [['float'], ['vec3']],
+  inputs: [['float']],
+  dataTypes: [['float']],
   preferExpression: true,
   stringify: (_, innerExpressions) => {
     return `abs(${innerExpressions[0]})`

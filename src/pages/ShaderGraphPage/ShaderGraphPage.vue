@@ -20,12 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { functions as funcs, coords } from './examples/test'
 import { provideShaderGraphController } from './useShaderGraphController'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { NodeTypesMap } from './utils/NodeTypesMap'
 
 const shaderGraph = provideShaderGraphController()
 shaderGraph.init(funcs, coords)
@@ -58,6 +59,21 @@ const handleNewNodeChange = (nodeTypeName) => {
 const functionsKeys = computed(() => Object.keys(shaderGraph.functions.value))
 
 const allowedTypes = ['float', 'vec2', 'vec3', 'vec4']
+
+const tempType = ref(null)
+
+const disallowedTypes = ['function-return']
+const allowedNodes = computed(() =>
+  Array.from(NodeTypesMap.keys()).filter((t) => !disallowedTypes.find((dt) => dt === t)),
+)
+
+function handleAddNode() {
+  showNodeCreation.value = false
+  if (tempType.value) {
+    handleNewNodeChange(tempType.value)
+  }
+  tempType.value = null
+}
 </script>
 
 <template>
@@ -217,8 +233,29 @@ const allowedTypes = ['float', 'vec2', 'vec3', 'vec4']
         <DialogHeader>
           <DialogTitle>Create node</DialogTitle>
         </DialogHeader>
-        <div>
-          <input @change="(e) => handleNewNodeChange(e.target.value)" />
+        <div class="flex-col">
+          <div class="flex-col gap-2 mb-2">
+            <div>
+              <Label for="function-Output">Type</Label>
+              <Select v-model:model-value="tempType">
+                <SelectTrigger>
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      v-for="type in allowedNodes"
+                      :key="type"
+                      :value="type"
+                    >
+                      {{ type }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <Button @click="handleAddNode">Create</Button>
         </div>
       </DialogContent>
     </Dialog>
