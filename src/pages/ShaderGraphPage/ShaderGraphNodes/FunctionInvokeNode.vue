@@ -3,6 +3,7 @@
     <NodeSelect
       v-model:model-value="func"
       :options="options"
+      placeholder="Select function"
     >
       <template #label>Functions</template>
     </NodeSelect>

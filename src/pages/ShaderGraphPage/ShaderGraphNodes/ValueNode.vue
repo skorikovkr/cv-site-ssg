@@ -1,62 +1,62 @@
 <template>
   <div style="padding: 0 35px 0 5px; display: flex; flex-direction: column; gap: 5px">
-    <select v-model="type">
-      <option
-        v-for="t in types"
-        :key="t"
-        :value="t"
+    <div class="min-w-[105px]">
+      <NodeSelect
+        v-model:model-value="type"
+        :options="options"
+        placeholder="Select type"
       >
-        {{ t }}
-      </option>
-    </select>
+        <template #label>Type</template>
+      </NodeSelect>
+    </div>
 
     <div v-if="type === 'float'">
-      <input
+      <NodeInput
         v-model.lazy="value"
-        style="width: 30px"
+        style="width: 70px"
         v-prevent-pointer-movement
-      />
+      ></NodeInput>
     </div>
 
     <template v-else>
       <template v-if="type === 'vec2' || type === 'vec3' || type === 'vec4'">
-        <div style="display: flex; gap: 5px">
+        <div class="value-node__input">
           <div>x:</div>
-          <input
+          <NodeInput
             v-model.lazy="x"
-            style="width: 30px"
+            style="width: 70px"
             v-prevent-pointer-movement
-          />
+          ></NodeInput>
         </div>
-        <div style="display: flex; gap: 5px">
+        <div class="value-node__input">
           <div>y:</div>
-          <input
+          <NodeInput
             v-model.lazy="y"
-            style="width: 30px"
+            style="width: 70px"
             v-prevent-pointer-movement
-          />
+          ></NodeInput>
         </div>
       </template>
 
       <div v-if="type === 'vec3' || type === 'vec4'">
-        <div style="display: flex; gap: 5px">
+        <div class="value-node__input">
           <div>z:</div>
-          <input
+          <NodeInput
             v-model.lazy="z"
-            style="width: 30px"
+            style="width: 70px"
             v-prevent-pointer-movement
-          />
+          ></NodeInput>
         </div>
       </div>
 
       <div v-if="type === 'vec4'">
-        <div style="display: flex; gap: 5px">
+        <div class="value-node__input">
           <div>w:</div>
-          <input
+          <NodeInput
             v-model.lazy="w"
-            style="width: 30px"
+            style="width: 70px"
             v-prevent-pointer-movement
-          />
+          ></NodeInput>
         </div>
       </div>
     </template>
@@ -64,8 +64,10 @@
 </template>
 
 <script setup>
-import { ref, toValue, watch } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 import { vPreventPointerMovement } from '../utils/PreventPointerDirectiveMove'
+import NodeSelect from './UI/NodeSelect.vue'
+import NodeInput from './UI/NodeInput.vue'
 
 const props = defineProps(['node'])
 
@@ -78,6 +80,14 @@ const z = ref(parts[3] ?? '')
 const w = ref(parts[4] ?? '')
 const type = ref(toValue(props.node?.dataType ?? 'float'))
 const types = ['float', 'vec2', 'vec3', 'vec4']
+
+const options = computed(() =>
+  types.map((t) => ({
+    key: t,
+    value: t,
+    label: t,
+  })),
+)
 
 const emits = defineEmits(['updateNode'])
 
@@ -121,3 +131,11 @@ watch([value, x, y, z, w, type], () => {
   }
 })
 </script>
+
+<style>
+.value-node__input {
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+}
+</style>

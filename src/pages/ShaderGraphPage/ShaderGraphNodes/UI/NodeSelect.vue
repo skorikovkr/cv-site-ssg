@@ -3,7 +3,7 @@
     <Label class="text-xs"><slot name="label"></slot></Label>
     <Select v-model:model-value="modelValue">
       <SelectTrigger class="bg-background p-1 px-2 h-auto">
-        <SelectValue placeholder="Select function" />
+        <SelectValue :placeholder="placeholder" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -40,5 +40,6 @@ defineProps<{
     value: AcceptableValue
     label: string | number
   }[]
+  placeholder?: string
 }>()
 </script>

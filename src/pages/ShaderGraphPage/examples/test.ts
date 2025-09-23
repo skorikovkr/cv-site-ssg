@@ -179,6 +179,16 @@ export const functions = {
           id: 'function000001',
         },
       },
+      customNode0000123: {
+        id: 'customNode0000123',
+        type: 'custom-node',
+        inputTypes: ['float'],
+        dataType: 'vec3',
+        inputs: [null],
+        options: {
+          functionName: 'someCustomNode',
+        },
+      },
     },
   },
 }
@@ -186,9 +196,13 @@ export const functions = {
 export const coords = {
   main: {
     nodes: {
-      func0000123: {
+      customNode0000123: {
         x: 50,
         y: 50,
+      },
+      func0000123: {
+        x: 50,
+        y: 250,
       },
       root: {
         x: 883,

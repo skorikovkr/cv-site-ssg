@@ -132,13 +132,11 @@
         </div>
       </div>
     </div>
-    <div
-      class="p-2"
-      v-prevent-pointer-movement
-    >
+    <div v-prevent-pointer-movement>
       <component
         :is="ShaderGraphNodes[node.type]"
         :node="node"
+        class="m-2"
         @updateNode="handleNodeOptionChanged"
       />
     </div>

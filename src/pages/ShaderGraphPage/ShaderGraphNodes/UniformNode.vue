@@ -1,22 +1,18 @@
 <template>
-  <div>
-    <select
-      v-model="uniform"
-      style="width: 60px"
+  <div class="min-w-[105px]">
+    <NodeSelect
+      v-model:model-value="uniform"
+      :options="options"
+      placeholder="Select type"
     >
-      <option
-        v-for="t in types"
-        :key="t.name"
-        :value="t"
-      >
-        {{ t.name }}
-      </option>
-    </select>
+      <template #label>Type</template>
+    </NodeSelect>
   </div>
 </template>
 
 <script setup>
-import { ref, toValue, watch } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
+import NodeSelect from './UI/NodeSelect.vue'
 
 const props = defineProps(['node'])
 
@@ -36,6 +32,14 @@ const types = [
 ]
 const uniform = ref(
   types.find((t) => t.name === toValue(props.node?.options?.uniformName)) ?? types[0],
+)
+
+const options = computed(() =>
+  types.map((t) => ({
+    key: t.name,
+    label: t.name,
+    value: t,
+  })),
 )
 
 const emits = defineEmits(['updateNode'])

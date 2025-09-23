@@ -238,3 +238,14 @@ NodeTypesMap.set('function-arg', {
     return `${node.options.name}`
   },
 })
+
+NodeTypesMap.set('custom-node', {
+  inputs: (definition) => definition.inputTypes,
+  dataTypes: [[(definition) => definition.output]],
+  options: ['functionName'],
+  preferExpression: true,
+  defaultOptions: [null],
+  stringify: (node, innerExpressions) => {
+    return `${node.options.functionName}(${innerExpressions.join(',')})`
+  },
+})
