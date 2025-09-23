@@ -16,9 +16,7 @@
       class="draggable__header rounded-t-sm border-b flex justify-between items-center"
       @pointerdown.stop="handlePointerDown"
     >
-      <div>
-        {{ node.type }}
-      </div>
+      <div>{{ node.type }}</div>
 
       <div class="flex gap-1">
         <div
@@ -132,7 +130,7 @@
         </div>
       </div>
     </div>
-    <div v-prevent-pointer-movement>
+    <div v-prevent-pointer-movement.disable="isDragging">
       <component
         :is="ShaderGraphNodes[node.type]"
         :node="node"
@@ -144,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { ShaderGraphNodes } from './ShaderGraphNodes/ShaderGraphNodes'
 import { vPreventPointerMovement } from './utils/PreventPointerDirectiveMove'
 import { injectShaderGraphController } from './useShaderGraphController'
@@ -159,7 +157,7 @@ const el = ref(null)
 
 const shaderGraphStore = injectShaderGraphController()
 
-const { originPoint, selectedNode } = shaderGraphStore
+const { originPoint, selectedNode, nodesCoords, currentFunctionId } = shaderGraphStore
 
 const props = defineProps(['node', 'nodeCoord', 'isDragging'])
 
@@ -172,14 +170,18 @@ const emits = defineEmits([
   'pointerDown',
 ])
 
-const width = ref(100)
+const width = ref(nodesCoords.value?.[currentFunctionId.value].nodes[props.node.id].width ?? 100)
 const x = computed(() => props.nodeCoord.x)
 const y = computed(() => props.nodeCoord.y)
 const transformedX = computed(() => originPoint.value.x + x.value)
 const transformedY = computed(() => originPoint.value.y + y.value)
 
 onMounted(() => {
-  width.value = el.value?.getBoundingClientRect().width ?? 100
+  nextTick(() => {
+    setTimeout(() => {
+      width.value = el.value?.getBoundingClientRect().width ?? 100
+    }, 0)
+  })
 })
 
 const variableName = ref(props.node.variableName)

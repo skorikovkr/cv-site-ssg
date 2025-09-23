@@ -84,19 +84,24 @@ export function useShaderGraphController() {
         wires.value.splice(existingWireIndex, 1)
         return
       }
-      const wire = wires.value[existingWireIndex]
-      wire.starts = functions.value[currentFunctionId.value].nodes[nodeId].inputs?.map((i) => {
-        return i
-          ? {
-              id: i,
-              x: nodesCoords.value[currentFunctionId.value].nodes[i]?.x ?? 0,
-              y: nodesCoords.value[currentFunctionId.value].nodes[i]?.y ?? 0,
-              width: nodesCoords.value[currentFunctionId.value].nodes[i]?.width ?? 100,
-            }
-          : null
-      })
-      wire.end.x = coords?.x ?? 0
-      wire.end.y = coords?.y ?? 0
+      wires.value[existingWireIndex] = {
+        id: nodeId,
+        starts: functions.value[currentFunctionId.value].nodes[nodeId].inputs?.map((i) => {
+          return i
+            ? {
+                id: i,
+                x: nodesCoords.value[currentFunctionId.value].nodes[i]?.x ?? 0,
+                y: nodesCoords.value[currentFunctionId.value].nodes[i]?.y ?? 0,
+                width: nodesCoords.value[currentFunctionId.value].nodes[i]?.width ?? 100,
+              }
+            : null
+        }),
+        end: {
+          id: nodeId,
+          x: coords?.x ?? 0,
+          y: coords?.y ?? 0,
+        },
+      }
     } else {
       wires.value.push({
         id: nodeId,

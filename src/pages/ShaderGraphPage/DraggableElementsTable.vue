@@ -24,7 +24,6 @@
           :origin-point="originPoint"
           :key="w.id"
           :end="w.end"
-          :node-width="w.width"
           :starts="w.starts"
           @wire-click="handleWireClick"
         />
@@ -113,6 +112,7 @@ function handlePointerMove(e) {
   cursorY.value = e.clientY - (rect?.top ?? 0)
   if (draggingNodeId.value) {
     nodesCoords.value[currentFunctionId.value].nodes[draggingNodeId.value] = {
+      ...nodesCoords.value?.[currentFunctionId.value].nodes?.[draggingNodeId.value],
       x: cursorX.value - originPoint.value.x - draggingPointerCoords.value.x,
       y: cursorY.value - originPoint.value.y - draggingPointerCoords.value.y,
     }

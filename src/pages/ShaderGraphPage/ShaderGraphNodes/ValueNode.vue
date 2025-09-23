@@ -1,5 +1,7 @@
 <template>
-  <div style="padding: 0 35px 0 5px; display: flex; flex-direction: column; gap: 5px">
+  <div
+    style="padding: 0 35px 0 5px; display: flex; flex-direction: column; gap: 5px; margin-top: 0"
+  >
     <div class="min-w-[105px]">
       <NodeSelect
         v-model:model-value="type"
@@ -21,18 +23,18 @@
     <template v-else>
       <template v-if="type === 'vec2' || type === 'vec3' || type === 'vec4'">
         <div class="value-node__input">
-          <div>x:</div>
+          <div class="text-sm font-medium">x:</div>
           <NodeInput
             v-model.lazy="x"
-            style="width: 70px"
+            style="width: 80px"
             v-prevent-pointer-movement
           ></NodeInput>
         </div>
         <div class="value-node__input">
-          <div>y:</div>
+          <div class="text-sm font-medium">y:</div>
           <NodeInput
             v-model.lazy="y"
-            style="width: 70px"
+            style="width: 80px"
             v-prevent-pointer-movement
           ></NodeInput>
         </div>
@@ -40,10 +42,10 @@
 
       <div v-if="type === 'vec3' || type === 'vec4'">
         <div class="value-node__input">
-          <div>z:</div>
+          <div class="text-sm font-medium">z:</div>
           <NodeInput
             v-model.lazy="z"
-            style="width: 70px"
+            style="width: 80px"
             v-prevent-pointer-movement
           ></NodeInput>
         </div>
@@ -51,10 +53,10 @@
 
       <div v-if="type === 'vec4'">
         <div class="value-node__input">
-          <div>w:</div>
+          <div class="text-sm font-medium">w:</div>
           <NodeInput
             v-model.lazy="w"
-            style="width: 70px"
+            style="width: 80px"
             v-prevent-pointer-movement
           ></NodeInput>
         </div>
@@ -137,5 +139,6 @@ watch([value, x, y, z, w, type], () => {
   display: flex;
   gap: 5px;
   justify-content: space-between;
+  align-items: center;
 }
 </style>

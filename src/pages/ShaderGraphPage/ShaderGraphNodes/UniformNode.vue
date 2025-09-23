@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-[105px]">
+  <div class="min-w-[105px] mt-0">
     <NodeSelect
       v-model:model-value="uniform"
       :options="options"

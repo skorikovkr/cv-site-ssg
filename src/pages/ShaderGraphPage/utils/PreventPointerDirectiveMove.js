@@ -1,14 +1,18 @@
-const stopPropagation = (e) => e.stopPropagation()
-
 export const vPreventPointerMovement = {
-  mounted: (el) => {
-    el.addEventListener('pointermove', stopPropagation)
-    el.addEventListener('pointerup', stopPropagation)
-    el.addEventListener('pointerdown', stopPropagation)
+  mounted: (el, binding) => {
+    const stopPropagation = (e) => {
+      if (!binding.disable) e.stopPropagation()
+    }
+    el._stopPropagation = stopPropagation
+    el.addEventListener('pointermove', el._stopPropagation)
+    el.addEventListener('pointerup', el._stopPropagation)
+    el.addEventListener('pointerdown', el._stopPropagation)
   },
   unmounted: (el) => {
-    el.removeEventListener('pointermove', stopPropagation)
-    el.removeEventListener('pointerup', stopPropagation)
-    el.removeEventListener('pointerdown', stopPropagation)
+    if (el._stopPropagation) {
+      el.removeEventListener('pointermove', el._stopPropagation)
+      el.removeEventListener('pointerup', el._stopPropagation)
+      el.removeEventListener('pointerdown', el._stopPropagation)
+    }
   },
 }
