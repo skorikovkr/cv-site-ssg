@@ -21,19 +21,15 @@
       </div>
 
       <div class="flex gap-1">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <CodeSquare
-                :size="14"
-                color="gray"
-              ></CodeSquare>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>This node contains custom code</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div
+          v-if="node.customCode"
+          title="This node contains custom code"
+        >
+          <CodeSquare
+            :size="14"
+            color="gray"
+          ></CodeSquare>
+        </div>
 
         <Popover modal>
           <PopoverTrigger as-child>
@@ -160,7 +156,6 @@ import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 const el = ref(null)
 
