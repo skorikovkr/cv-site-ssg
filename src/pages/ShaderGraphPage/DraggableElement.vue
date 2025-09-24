@@ -37,6 +37,19 @@
             ></Settings>
           </PopoverTrigger>
           <PopoverContent class="w-50 p-2">
+            <div
+              v-if="overloads.length"
+              class="pb-2"
+            >
+              <NodeSelect
+                v-model:model-value="selectedOverload"
+                :options="overloads"
+                placeholder="Select overload"
+              >
+                <template #label>Overload</template>
+              </NodeSelect>
+            </div>
+
             <div class="flex items-center space-x-2 pb-2">
               <Checkbox
                 v-model="isStatement"
@@ -152,6 +165,8 @@ import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
+import NodeSelect from './ShaderGraphNodes/UI/NodeSelect.vue'
+import { NodeTypesMap } from './utils/NodeTypesMap'
 
 const el = ref(null)
 
@@ -175,6 +190,45 @@ const x = computed(() => props.nodeCoord.x)
 const y = computed(() => props.nodeCoord.y)
 const transformedX = computed(() => originPoint.value.x + x.value)
 const transformedY = computed(() => originPoint.value.y + y.value)
+const overloads = computed(() => {
+  const types = Array.from(NodeTypesMap.entries())
+  const i = types.findIndex((kv) => kv[0] === props.node.type)
+  if (i === -1) return []
+  if (!Array.isArray(types[i][1].inputs) || !Array.isArray(types[i][1].dataTypes)) return []
+  const typeInputs = types[i][1].inputs
+  const typeOutputs = types[i][1].dataTypes
+  return typeInputs.map((i, index) => {
+    const key = `${i.join(',')} - ${typeOutputs[index]}`
+    return {
+      key,
+      value: {
+        inputs: i,
+        output: typeOutputs[index][0],
+      },
+      label: `${i.join(',')} - ${typeOutputs[index]}`,
+    }
+  })
+})
+
+const selectedOverload = ref(
+  props.node.inputTypes && props.node.dataType
+    ? {
+        inputs: props.node.inputTypes,
+        output: props.node.dataType,
+      }
+    : {
+        inputs: overloads.value[0]?.value.inputs ?? null,
+        output: overloads.value[0]?.value.output ?? null,
+      },
+)
+
+watch(selectedOverload, () => {
+  emits('updateNode', props.node.id, {
+    dataType: selectedOverload.value.output,
+    inputTypes: selectedOverload.value.inputs,
+    inputs: selectedOverload.value.inputs.map(() => null),
+  })
+})
 
 onMounted(() => {
   nextTick(() => {

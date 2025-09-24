@@ -1,6 +1,7 @@
 <template>
   <LazyInput
     v-model="modelValue"
+    autocomplete="off"
     class="p-1 px-2 h-auto"
   ></LazyInput>
 </template>

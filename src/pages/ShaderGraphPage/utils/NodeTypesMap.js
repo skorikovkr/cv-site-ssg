@@ -94,8 +94,8 @@ NodeTypesMap.set('uniform', {
 })
 
 NodeTypesMap.set('extractor', {
-  inputs: [['vec2']],
-  dataTypes: [['float']],
+  inputs: [['vec2'], ['vec3'], ['vec4']],
+  dataTypes: [['float'], ['float'], ['float']],
   options: ['propertyName'],
   defaultOptions: ['x'],
   preferExpression: true,

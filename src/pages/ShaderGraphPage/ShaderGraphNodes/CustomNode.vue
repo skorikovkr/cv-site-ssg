@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-[125px] pl-6 mt-0">
+  <div class="min-w-[125px] px-6 mt-0">
     <Label class="text-xs">Function name</Label>
     <NodeInput
       v-model.lazy="value"

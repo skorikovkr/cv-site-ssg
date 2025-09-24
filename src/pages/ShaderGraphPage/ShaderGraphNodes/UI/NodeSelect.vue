@@ -1,7 +1,10 @@
 <template>
   <div class="node-select">
     <Label class="text-xs"><slot name="label"></slot></Label>
-    <Select v-model:model-value="modelValue">
+    <Select
+      v-model:model-value="modelValue"
+      autocomplete="off"
+    >
       <SelectTrigger class="bg-background p-1 px-2 h-auto">
         <SelectValue :placeholder="placeholder" />
       </SelectTrigger>
