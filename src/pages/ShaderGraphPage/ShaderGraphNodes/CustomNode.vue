@@ -3,7 +3,6 @@
     <Label class="text-xs">Function name</Label>
     <NodeInput
       v-model.lazy="value"
-      style="width: 85px"
       v-prevent-pointer-movement
     ></NodeInput>
 
@@ -59,9 +58,9 @@ const props = defineProps(['node'])
 
 const types = ['float', 'vec2', 'vec3', 'vec4']
 
-const value = ref()
-const input = ref(['float'])
-const output = ref('float')
+const value = ref(props.node.options?.functionName ?? '')
+const input = ref(props.node.inputTypes ?? ['float'])
+const output = ref(props.node.dataType ?? 'float')
 const tempInput = ref(null)
 
 const emits = defineEmits(['updateNode'])
