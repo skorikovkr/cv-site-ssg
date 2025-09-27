@@ -3,6 +3,7 @@ import ValueNode from './ValueNode.vue'
 import FunctionInvokeNode from './FunctionInvokeNode.vue'
 import CustomNode from './CustomNode.vue'
 import ExtractorNode from './ExtractorNode.vue'
+import FunctionArgNode from './FunctionArgNode.vue'
 
 export const ShaderGraphNodes = {
   value: ValueNode,
@@ -10,4 +11,5 @@ export const ShaderGraphNodes = {
   'function-invoke': FunctionInvokeNode,
   'custom-node': CustomNode,
   extractor: ExtractorNode,
+  'function-arg': FunctionArgNode,
 }

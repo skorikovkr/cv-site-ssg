@@ -296,7 +296,9 @@ const inputPoints = computed(() => {
 const outputPoint = computed(() => {
   if (props.node?.dataType)
     return {
-      type: props.node.dataType ?? '?',
+      type:
+        (typeof props.node.dataType === 'function' ? props.node.dataType() : props.node.dataType) ??
+        '?',
       isInput: false,
       x: width.value,
       y: 20,

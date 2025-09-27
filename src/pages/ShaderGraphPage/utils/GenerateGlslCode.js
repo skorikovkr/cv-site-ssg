@@ -22,9 +22,10 @@ function GenerateFunctionCode(f) {
     if (!node) {
       errors.push({
         function: f.id,
-        parentNode: parentNode.id,
+        parentNode: parentNode?.id,
         index: argIndex,
       })
+      console.error(errors)
       return 'NULL'
     }
     if (node.type === 'uniform') {

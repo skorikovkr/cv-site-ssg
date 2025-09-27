@@ -3,7 +3,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import DraggableElementsTable from './DraggableElementsTable.vue'
 import ShaderGraphMenubar from './ShaderGraphMenubar.vue'
 import { Button } from '@/components/ui/button'
-import { Blocks, FunctionSquare, Plus, Spline, Terminal, X } from 'lucide-vue-next'
+import { Blocks, FunctionSquare, Plus, Spline, Terminal, Trash, X } from 'lucide-vue-next'
 import {
   Dialog,
   DialogContent,
@@ -20,16 +20,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { functions as funcs, coords } from './examples/test'
 import { provideShaderGraphController } from './useShaderGraphController'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NodeTypesMap } from './utils/NodeTypesMap'
+import { getRandInt } from './utils/GetRandInt'
+import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
 
 const shaderGraph = provideShaderGraphController()
-shaderGraph.init(funcs, coords)
+shaderGraph.init(
+  {
+    main: {
+      id: 'main',
+      name: 'main',
+      inputTypes: [],
+      inputsNames: [],
+      output: 'void',
+      nodes: {
+        root: {
+          type: 'function-return',
+          id: 'root',
+          inputTypes: ['vec4'],
+          inputs: [null],
+        },
+      },
+    },
+  },
+  {
+    main: {
+      nodes: {
+        root: {
+          x: 10,
+          y: 10,
+        },
+      },
+    },
+  },
+)
 
 const showCode = ref(false)
 const showFunctionCreation = ref(false)
@@ -73,6 +103,24 @@ function handleAddNode() {
     handleNewNodeChange(tempType.value)
   }
   tempType.value = null
+}
+
+function handleAddFunctionInput() {
+  shaderGraph.newFunction.value?.inputTypes.push('float')
+  shaderGraph.newFunction.value?.inputsNames.push('arg' + getRandInt(1, 100000))
+}
+
+function handleChangeFunctionInput(value: string, index: number) {
+  let name = value
+  while (shaderGraph.newFunction.value.inputsNames.find((v) => v === name)) {
+    name += '_2'
+  }
+  shaderGraph.newFunction.value.inputsNames[index] = name
+}
+
+function handleDeleteFunctionInput(index: number) {
+  shaderGraph.newFunction.value?.inputsNames.splice(index, 1)
+  shaderGraph.newFunction.value?.inputTypes.splice(index, 1)
 }
 </script>
 
@@ -183,13 +231,16 @@ function handleAddNode() {
       </DialogContent>
     </Dialog>
 
-    <Dialog v-model:open="showFunctionCreation">
+    <Dialog
+      v-model:open="showFunctionCreation"
+      @update:open="(v) => !v && shaderGraph.resetNewFunction()"
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create function</DialogTitle>
         </DialogHeader>
-        <div class="flex-col">
-          <div class="flex-col gap-2 mb-2">
+        <div>
+          <div class="flex flex-col gap-1 mb-2">
             <div>
               <Label for="function-name">Name</Label>
               <Input
@@ -200,8 +251,71 @@ function handleAddNode() {
                 @update:model-value="(p) => (shaderGraph.newFunction.value.name = p)"
               />
             </div>
+            <div class="flex flex-col">
+              <Label
+                for="function-input"
+                class="mb-1"
+                >Input</Label
+              >
+              <div
+                v-if="shaderGraph.newFunction.value?.inputTypes?.length"
+                class="flex flex-col gap-1"
+              >
+                <div
+                  v-for="i in shaderGraph.newFunction.value.inputTypes.length"
+                  :key="shaderGraph.newFunction.value.inputsNames[i - 1]"
+                  class="flex gap-2 items-center h-[36px]"
+                >
+                  <div>
+                    <Select
+                      :model-value="shaderGraph.newFunction.value.inputTypes[i - 1]"
+                      @update:model-value="
+                        (v) => (shaderGraph.newFunction.value.inputTypes[i - 1] = v)
+                      "
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Input" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem
+                            v-for="type in allowedTypes"
+                            :key="type"
+                            :value="type"
+                          >
+                            {{ type }}
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <NodeInput
+                    :model-value="shaderGraph.newFunction.value.inputsNames[i - 1]"
+                    class="h-full"
+                    @update:model-value="(v) => handleChangeFunctionInput(v, i - 1)"
+                  ></NodeInput>
+                  <div>
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      @click="() => handleDeleteFunctionInput(i - 1)"
+                    >
+                      <Trash
+                    /></Button>
+                  </div>
+                </div>
+              </div>
+              <Button
+                class="mt-1"
+                size="icon"
+                variant="outline"
+                @click="handleAddFunctionInput"
+              >
+                <Plus
+              /></Button>
+            </div>
             <div>
-              <Label for="function-Output">Output</Label>
+              <Label for="function-output">Output</Label>
               <Select
                 :model-value="shaderGraph.newFunction.value?.output"
                 @update:model-value="(v) => (shaderGraph.newFunction.value.output = v)"

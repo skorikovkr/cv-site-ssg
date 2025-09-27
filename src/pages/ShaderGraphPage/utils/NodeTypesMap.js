@@ -211,7 +211,7 @@ NodeTypesMap.set('length', {
 
 NodeTypesMap.set('function-invoke', {
   inputs: (functionDefinitionNode) => functionDefinitionNode.inputTypes,
-  dataTypes: [[(functionDefinitionNode) => functionDefinitionNode.output]],
+  dataTypes: null,
   options: ['id'],
   preferExpression: true,
   defaultOptions: [null],

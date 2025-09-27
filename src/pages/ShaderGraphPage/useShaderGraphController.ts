@@ -60,9 +60,14 @@ export function useShaderGraphController() {
     nodesCoords.value[id] = {
       nodes: {},
     }
-    addNode('function-return', id, {
-      inputs: [[funcDefinition.output]],
-    })
+    addNode(
+      'function-return',
+      id,
+      {
+        inputs: [[funcDefinition.output]],
+      },
+      'root',
+    )
     return id
   }
 
@@ -137,10 +142,11 @@ export function useShaderGraphController() {
       dataType: null,
       inputs: null,
     },
+    nodeName = null,
   ) {
     const nodeType = NodeTypesMap.get(nodeTypeName)
     if (nodeType) {
-      const name = nodeTypeName + getRandInt(100000, 999999).toString()
+      const name = nodeName ?? nodeTypeName + getRandInt(100000, 999999).toString()
       const defaultOptions = {}
       nodeType.options?.forEach((o, index) => {
         defaultOptions[o] = nodeType.defaultOptions[index]
