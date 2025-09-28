@@ -31,35 +31,7 @@ import { getRandInt } from './utils/GetRandInt'
 import NodeInput from './ShaderGraphNodes/UI/NodeInput.vue'
 
 const shaderGraph = provideShaderGraphController()
-shaderGraph.init(
-  {
-    main: {
-      id: 'main',
-      name: 'main',
-      inputTypes: [],
-      inputsNames: [],
-      output: 'void',
-      nodes: {
-        root: {
-          type: 'function-return',
-          id: 'root',
-          inputTypes: ['vec4'],
-          inputs: [null],
-        },
-      },
-    },
-  },
-  {
-    main: {
-      nodes: {
-        root: {
-          x: 10,
-          y: 10,
-        },
-      },
-    },
-  },
-)
+shaderGraph.createEmpty()
 
 const showCode = ref(false)
 const showFunctionCreation = ref(false)

@@ -242,6 +242,38 @@ export function useShaderGraphController() {
     }
   })
 
+  function createEmpty() {
+    init(
+      {
+        main: {
+          id: 'main',
+          name: 'main',
+          inputTypes: [],
+          inputsNames: [],
+          output: 'void',
+          nodes: {
+            root: {
+              type: 'function-return',
+              id: 'root',
+              inputTypes: ['vec4'],
+              inputs: [null],
+            },
+          },
+        },
+      },
+      {
+        main: {
+          nodes: {
+            root: {
+              x: 10,
+              y: 10,
+            },
+          },
+        },
+      },
+    )
+  }
+
   return {
     originPoint,
     isPanning,
@@ -262,6 +294,7 @@ export function useShaderGraphController() {
     result,
 
     init,
+    createEmpty,
     resetNewFunction,
     addFunction,
     updateWires,

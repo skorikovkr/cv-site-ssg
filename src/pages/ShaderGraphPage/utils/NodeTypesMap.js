@@ -241,7 +241,7 @@ NodeTypesMap.set('function-arg', {
 
 NodeTypesMap.set('custom-node', {
   inputs: (definition) => definition.inputTypes,
-  dataTypes: [[(definition) => definition.output]],
+  dataTypes: null,
   options: ['functionName'],
   preferExpression: true,
   defaultOptions: [null],

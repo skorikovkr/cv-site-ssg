@@ -3,8 +3,14 @@
     <MenubarMenu>
       <MenubarTrigger>File</MenubarTrigger>
       <MenubarContent>
+        <MenubarItem @select="shaderGraph.createEmpty">
+          <span>New</span>
+        </MenubarItem>
         <MenubarItem>
           <span>Open</span>
+        </MenubarItem>
+        <MenubarItem>
+          <span>Save</span>
         </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
@@ -47,6 +53,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { ref } from 'vue'
+import { injectShaderGraphController } from './useShaderGraphController'
 
 const showAbout = ref(false)
+
+const shaderGraph = injectShaderGraphController()
 </script>
