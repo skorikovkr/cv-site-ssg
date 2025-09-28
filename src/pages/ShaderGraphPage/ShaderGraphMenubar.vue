@@ -6,8 +6,19 @@
         <MenubarItem @select="shaderGraph.createEmpty">
           <span>New</span>
         </MenubarItem>
-        <MenubarItem>
-          <span>Open</span>
+        <MenubarItem @select="handleFileSelectClick">
+          <label for="shader-graph__uploadInput">
+            <span>Open</span>
+          </label>
+          <input
+            ref="uploadFile"
+            class="hidden"
+            id="shader-graph__uploadInput"
+            type="file"
+            name="shader-graph__uploadInput"
+            accept="application/json"
+            @change="onFileChange"
+          />
         </MenubarItem>
         <MenubarItem @select="handleSave">
           <span>Save</span>
@@ -57,6 +68,7 @@ import { injectShaderGraphController } from './useShaderGraphController'
 import { saveJSONToFile } from './utils/SaveJsonFile'
 
 const showAbout = ref(false)
+const uploadFile = ref()
 
 const shaderGraph = injectShaderGraphController()
 
@@ -68,5 +80,26 @@ function handleSave() {
     },
     'shader-graph',
   )
+}
+
+function handleFileSelectClick() {
+  if (uploadFile.value) {
+    uploadFile.value.click()
+  }
+}
+
+const onFileChange = (e) => {
+  const file = e.target.files?.[0]
+  if (file) {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const fileContent = e.target.result
+      const data = JSON.parse(fileContent)
+      shaderGraph.init(data.nodes, data.coords)
+    }
+
+    reader.readAsText(file) // Read the file as text
+  }
 }
 </script>
