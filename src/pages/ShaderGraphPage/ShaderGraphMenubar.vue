@@ -9,7 +9,7 @@
         <MenubarItem>
           <span>Open</span>
         </MenubarItem>
-        <MenubarItem>
+        <MenubarItem @select="handleSave">
           <span>Save</span>
         </MenubarItem>
       </MenubarContent>
@@ -54,8 +54,19 @@ import {
 } from '@/components/ui/dialog'
 import { ref } from 'vue'
 import { injectShaderGraphController } from './useShaderGraphController'
+import { saveJSONToFile } from './utils/SaveJsonFile'
 
 const showAbout = ref(false)
 
 const shaderGraph = injectShaderGraphController()
+
+function handleSave() {
+  saveJSONToFile(
+    {
+      nodes: shaderGraph.functions.value,
+      coords: shaderGraph.nodesCoords.value,
+    },
+    'shader-graph',
+  )
+}
 </script>
